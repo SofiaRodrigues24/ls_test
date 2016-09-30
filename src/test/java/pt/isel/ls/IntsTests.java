@@ -44,4 +44,34 @@ public class IntsTests {
         int ix = Ints.indexOfBinary(v, 1, 1, 2);
         assertTrue(ix < 0);
     }
+
+    @Test
+    public void indexOfBinary_left_bound(){
+        int[] v = {1,2,3};
+        int idx = Ints.indexOfBinary(v,0,3,1);
+        assertTrue(idx==0);
+    }
+
+    @Test
+    public void indexOfBinary_mid_bound(){
+        int[] v = {1,2,3};
+        int idx = Ints.indexOfBinary(v,0,3,2);
+        assertTrue(idx==1);
+    }
+
+    @Test
+    public void indexOfBinary_right_bound(){
+        int[] v = {1,2,3};
+        int idx = Ints.indexOfBinary(v,0,3,3);
+        assertTrue(idx==2);
+    }
+
+    @Test
+    public void indexOfBinary_empty_array(){
+        int[] v = {};
+        int idx = Ints.indexOfBinary(v,0,2,1);
+        assertTrue(idx<0);
+    }
+
+
 }

@@ -11,11 +11,11 @@ public class Ints {
             throw new IllegalArgumentException("from(" + fromIndex + ") > to(" + toIndex + ")");
 
         int low = fromIndex;
-        int high = toIndex - 1;
+        int high = toIndex-1; // before: int high = toIndex - 1;
         int mid;
-
-        while(low < high){
-            mid = high + low / 2 + 1;
+        if(a.length==0) return -1; // added
+        while(low <= high){
+            mid = low + ((high-low)/2); //before: high + low / 2 + 1;
             if(n > a[mid]) low = mid + 1;
             else if(n < a[mid]) high = mid - 1;
             else return mid;
