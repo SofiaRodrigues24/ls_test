@@ -1,4 +1,8 @@
 # 1617-1
+
+Tiago Cardoso Nº 40546
+Sofia Rodrigues Nº 40591
+
 Repositório público do semestre de Inverno de 2016/2017
 
 Examplo de items
@@ -14,3 +18,5 @@ _italico_
 ### header 3
 
 [ISEL](http://www.isel.pt)
+
+
