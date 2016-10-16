@@ -1,27 +1,36 @@
 package pt.isel.ls;
 
-import pt.isel.ls.commands.Command;
+
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import pt.isel.ls.commands.*;
+import pt.isel.ls.jbdc.DBConnection;
 import pt.isel.ls.manager.*;
 
-import java.util.ArrayList;
-
+import java.util.HashMap;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
-        Manager manager = new Manager(new ArrayList<Command>());
+        HashMap<String, TreeNode> hashMap = new HashMap<>();
+        Tree tree = new Tree(hashMap);
+        setup(tree);
 
-        setup(manager);
         Request rq = new Request(args);
 
-        Command c = manager.getCommand(rq);
-        c.execute(rq.getParameters());
-        c.print();
+        Command command = tree.search(rq);
+
+        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
+
+        Result result = command.execute(dbConnection.getConnection(), rq.getParameters());
+
+        dbConnection.disconnect();
+
+        result.print();
     }
 
-    private static void setup(Manager manager) {
-        for (int i = 0; i < Data.commands.length; i++) {
-            manager.add(Data.commands[i]);
+    private static void setup(Tree tree) {
+        for (int i = 0; i < Data.templates.length; i++) {
+            tree.insert(Data.templates[i],Data.commands[i]);
         }
     }
 }

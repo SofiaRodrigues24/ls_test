@@ -1,8 +1,8 @@
 package pt.isel.ls.commands.POST;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import pt.isel.ls.commands.Command;
 import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.manager.Result;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -10,40 +10,27 @@ import java.util.HashMap;
 
 public class POSTChecklists  implements Command {
 
-    private CheckList checkList;
-
     @Override
-    public void execute(HashMap<String, String> map) throws SQLException {
-        try(Connection con = getConnection().getConnection()) {
-            final String query = "insert into checklist (name, check_description, duedate, completed) values (?, ?, ?,?)";
-            PreparedStatement statement = con.prepareStatement(query);
+    public Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
+        int id = 0;
+        final String query = "insert into checklist (name, check_description, duedate) values (?, ?, ?)";
+        PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
+        statement.setString(1, map.get("name"));
+        statement.setString(2, map.get("description"));
 
-            checkList = new CheckList(map.get("name"), map.get("description"), Date.valueOf(map.get("duedate")), false);
+        if(map.containsKey("duedate"))
+            statement.setDate(3, Date.valueOf(map.get("duedate")));
+        else statement.setDate(3, null);
 
-            statement.setString(1, checkList.getName());
-            statement.setString(2, checkList.getDescription());
-            statement.setDate(3, checkList.getDuedate());
-            statement.setBoolean(4,false);
+        statement.executeUpdate();
 
+        ResultSet generatedKeys = statement.getGeneratedKeys();
+        if(generatedKeys.next())
+            id = generatedKeys.getInt(1);
 
-//            ResultSet generatedKeys = statement.getGeneratedKeys();
-//            checkList = new CheckList(generatedKeys.getInt(1));
-            statement.executeUpdate();
-            con.commit();
-        }
+        con.commit();
 
-
-    }
-
-    @Override
-    public String getRegularExpression() {
-        return "POST /checklists/name=[\\w+]{1,30}&description=[\\w+]{1,80}" +
-                "($|&duedate=\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d)";
-    }
-
-    @Override
-    public void print() {
-        checkList.toString();
+        return new Result<>(id);
     }
 }

@@ -1,24 +1,17 @@
 package pt.isel.ls.commands.GET;
 
 import pt.isel.ls.commands.Command;
+import pt.isel.ls.manager.Result;
 
+import java.sql.Connection;
 import java.util.HashMap;
 
 public class GETChecklistsCid implements Command {
 
 
     @Override
-    public void execute(HashMap<String, String> map) {
-
+    public Result execute(Connection con, HashMap<String, String> map) {
+        return null;
     }
 
-    @Override
-    public String getRegularExpression() {
-        return "GET /checklists/\\d{1,}";
-    }
-
-    @Override
-    public void print() {
-
-    }
 }

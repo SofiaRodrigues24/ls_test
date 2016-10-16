@@ -55,6 +55,6 @@ public class CheckList {
 
     @Override
     public String toString() {
-        return "cid: "+ cid +"\nname: "+name+"\ndescription: "+description+ "\nduedate: "+ duedate +"\ntasks: "+tasks+"\n";
+        return "{checklist "+ cid +"\n\tname: "+name+"\n\tdescription: "+description+ "\n\tduedate: "+ duedate +"\n\ttasks: "+tasks+"\n}\n";
     }
 }

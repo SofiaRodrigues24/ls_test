@@ -2,6 +2,7 @@ package pt.isel.ls.commands.GET;
 
 import pt.isel.ls.commands.Command;
 import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.manager.Result;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,39 +14,29 @@ import java.util.List;
 
 public class GETChecklists implements Command {
 
-    private List<CheckList> checklists;
-
     @Override
-    public void execute(HashMap<String, String> map) throws SQLException {
-		//TODO: receber um printstream para imprimir não é necessário usar o domain
-		
-        checklists = new ArrayList<>();
+    public Result<List<CheckList>> execute(Connection con, HashMap<String, String> map) throws SQLException {
+        List<CheckList> checklists = new ArrayList<>();
 
-        try (Connection con = getConnection().getConnection()) {
-            con.setAutoCommit(false);
-            final String query = "select * from checklist";
+        con.setAutoCommit(false);
+        final String query = "select * from checklist";
 
-            PreparedStatement statement = con.prepareStatement(query);
+        PreparedStatement statement = con.prepareStatement(query);
 
-            ResultSet rs = statement.executeQuery();
+        ResultSet rs = statement.executeQuery();
 
-            while(rs.next()) {
-                CheckList c = new CheckList(
-                        rs.getInt("cid"), rs.getString("name"),
-                        rs.getString("check_description"), rs.getDate("duedate"));
-                checklists.add(c);
-            }
+        while(rs.next()) {
+            CheckList c = new CheckList(
+                    rs.getInt("cid"), rs.getString("name"),
+                    rs.getString("check_description"), rs.getDate("duedate"));
+            checklists.add(c);
+
         }
+
+        con.commit();
+        con.setAutoCommit(true);
+
+        return new Result<>(checklists);
     }
 
-    @Override
-    public String getRegularExpression() {
-        return "GET /checklists$";
-    }
-
-    @Override
-    public void print() {
-        System.out.println(checklists.toString());
-
-    }
 }

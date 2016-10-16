@@ -7,6 +7,14 @@ import pt.isel.ls.commands.POST.*;
 
 public class Data {
 
+    public static String [] templates = {
+            "GET/checklists", "GET/checklists/{cid}", "GET/checklists/closed",
+            "GET/checklists/open/sorted/duedate", "GET/checklists/open/sorted/noftasks",
+            "GET/templates", "GET/templates/{tid}",
+            "POST/checklists", "POST/checklists/{cid}/tasks", "POST/checklists/{cid}/tasks/{lid}",
+            "POST/templates", "POST/templates/{tid}/create", "POST/templates/{tid}/tasks"
+    };
+
     public static Command[] commands = {new GETChecklists(), new GETChecklistsCid(), new GETChecklistsClosed(),
             new GETChecklistsOpenSortedDuedate(), new GETChecklistsOpenSortedNoftasks(),
             new GETTemplates(), new GETTemplatesTid(),
