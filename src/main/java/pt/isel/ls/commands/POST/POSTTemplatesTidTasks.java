@@ -15,32 +15,36 @@ public class POSTTemplatesTidTasks implements Command {
     public Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
         int lid = 0;
 
+        String query = "insert into task (task_name, task_description) values (?, ?)";
+        String query1 = "insert into task_template (lid, tid) values (?, ?)";
+
         con.setAutoCommit(false);
-        final String query = "insert into task (name, task_description) values (?, ?)";
-        PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement statement1 = con.prepareStatement(query1);){
 
-        statement.setString(1, map.get("name"));
-        statement.setString(2, map.get("description"));
-        statement.executeUpdate();
+            statement.setString(1, map.get("name"));
+            statement.setString(2, map.get("description"));
+            statement.executeUpdate();
 
-        ResultSet generatedKeys = statement.getGeneratedKeys();
-        if(generatedKeys.next())
-            lid = generatedKeys.getInt(1);
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if(generatedKeys.next())
+                lid = generatedKeys.getInt(1);
 
-        statement.close();
+            statement1.setInt(1, lid);
+            statement1.setInt(2, Integer.parseInt(map.get("{tid}")));
+            statement1.executeUpdate();
 
-        String str = "insert into task_temp (lid, tid) values (?, ?)";
-
-        PreparedStatement ps = con.prepareStatement(str);
-
-        ps.setInt(1, lid);
-        ps.setInt(2, Integer.parseInt(map.get("{tid}")));
-        ps.executeUpdate();
-        ps.close();
-
-        con.commit();
-        con.setAutoCommit(true);
-
+            con.commit();
+            con.setAutoCommit(true);
+        } catch (Exception e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                System.out.println("error - rollback");
+            }
+            System.out.println("error - connection");
+            e.printStackTrace();
+        }
         return new Result<>(lid);
     }
 

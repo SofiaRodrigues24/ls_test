@@ -13,7 +13,6 @@ public class CheckList {
 
     private List<Task> tasks;
 
-    public CheckList() {}
 
     public CheckList(int CID) {
         this.cid = CID;
@@ -53,8 +52,15 @@ public class CheckList {
         return duedate;
     }
 
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     @Override
     public String toString() {
-        return "{checklist "+ cid +"\n\tname: "+name+"\n\tdescription: "+description+ "\n\tduedate: "+ duedate +"\n\ttasks: "+tasks+"\n}\n";
+        return "checklist "+ cid +"\n\tname: "+name+"\n\tdescription: "+description+ "" +
+                ((duedate!=null)?("\n\tduedate: "+ duedate):"")+
+                ((tasks!= null)? ("\n\ttasks: "+tasks):"")
+                +"\n";
     }
 }

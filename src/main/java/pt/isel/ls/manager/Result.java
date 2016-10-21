@@ -8,6 +8,10 @@ public class Result<E> {
         this.result = result;
     }
 
+    public E getResult() {
+        return result;
+    }
+
     /**
      * Presents the result on the standard output.
      */

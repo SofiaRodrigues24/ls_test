@@ -6,13 +6,13 @@ import pt.isel.ls.commands.*;
 import pt.isel.ls.jbdc.DBConnection;
 import pt.isel.ls.manager.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class App {
 
-    public static void main(String[] args) throws Exception {
-        HashMap<String, TreeNode> hashMap = new HashMap<>();
-        Tree tree = new Tree(hashMap);
+    public static void main(String[] args) {
+        Tree tree = new Tree();
         setup(tree);
 
         Request rq = new Request(args);
@@ -21,10 +21,18 @@ public class App {
 
         DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
 
-        Result result = command.execute(dbConnection.getConnection(), rq.getParameters());
-
-        dbConnection.disconnect();
-
+        Result result = null;
+        try {
+            result = command.execute(dbConnection.getConnection(), rq.getParameters());
+        } catch (Exception e) {
+            System.out.println("error - connection");
+        }finally {
+            try {
+                dbConnection.disconnect();
+            } catch (Exception e) {
+                System.out.println("error - disconnect");
+            }
+        }
         result.print();
     }
 

@@ -17,26 +17,33 @@ public class GETTemplates implements Command {
 
 
     @Override
-    public Result<List<Template>> execute(Connection con, HashMap<String, String> map) throws SQLException {
-        List<Template> templates = new ArrayList<>();
+    public Result<List<Template>> execute(Connection con, HashMap<String, String> map) {
+        List<Template> templates = null;
+        String query = "select * from template";
 
-        con.setAutoCommit(false);
-        final String query = "select * from template";
+        try ( PreparedStatement statement = con.prepareStatement(query)){
 
-        PreparedStatement statement = con.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
 
-        ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                if(templates == null)
+                    templates = new ArrayList<>();
 
-        while(rs.next()) {
-            Template t = new Template(
-                    rs.getInt("tid"), rs.getString("name"),
-                    rs.getString("temp_description"));
-            templates.add(t);
+                templates.add(new Template(
+                        rs.getInt("tid"), rs.getString("temp_name"),
+                        rs.getString("temp_description"))
+                );
+            }
 
+            con.commit();
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                System.out.println("error - rollback");
+            }
+            System.out.println("error - connection");
         }
-
-        con.commit();
-        con.setAutoCommit(true);
 
         return new Result<>(templates);
     }

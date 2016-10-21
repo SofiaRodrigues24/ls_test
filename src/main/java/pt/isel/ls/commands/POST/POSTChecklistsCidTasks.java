@@ -11,41 +11,41 @@ public class POSTChecklistsCidTasks implements Command {
 
     @Override
     public Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
-
         int id = 0;
+        String query = "insert into task (task_name, task_description) values (?, ?)";
+        String query1 = "insert into task_check (task_duedate, isClosed, lid, cid) values (?, ?, ?, ?)";
 
         con.setAutoCommit(false);
-        final String query = "insert into task (name, task_description) values (?, ?)";
-        PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement statement1 = con.prepareStatement(query1)){
 
-        statement.setString(1, map.get("name"));
-        statement.setString(2, map.get("description"));
-        statement.executeUpdate();
+            statement.setString(1, map.get("name"));
+            statement.setString(2, map.get("description"));
+            statement.executeUpdate();
 
-        ResultSet generatedKeys = statement.getGeneratedKeys();
-        if(generatedKeys.next())
-            id = generatedKeys.getInt(1);
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if(generatedKeys.next())
+                id = generatedKeys.getInt(1);
 
-        statement.close();
+            if(map.containsKey("duedate"))
+                statement1.setDate(1, Date.valueOf(map.get("duedate")));
+            else statement1.setDate(1, null);
 
-        String str = "insert into task_check (duedate, isClosed, lid, cid) values (?, ?, ?, ?)";
+            statement1.setBoolean(2, false);
+            statement1.setInt(3, id);
+            statement1.setInt(4, Integer.parseInt(map.get("{cid}")));
+            statement1.executeUpdate();
 
-        PreparedStatement ps = con.prepareStatement(str);
-
-        if(map.containsKey("duedate")) {
-            ps.setDate(1, Date.valueOf(map.get("duedate")));
+            con.commit();
+            con.setAutoCommit(true);
+        } catch (Exception e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                System.out.println("error - roolback");
+            }
+            System.out.println("error - connection");
         }
-        else ps.setDate(1, null);
-
-        ps.setBoolean(2, false);
-        ps.setInt(3, id);
-        ps.setInt(4, Integer.parseInt(map.get("{cid}")));
-        ps.executeUpdate();
-        ps.close();
-
-        con.commit();
-        con.setAutoCommit(true);
-
         return new Result<>(id);
 
     }

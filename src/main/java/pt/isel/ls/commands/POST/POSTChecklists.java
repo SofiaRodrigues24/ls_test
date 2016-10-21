@@ -11,25 +11,36 @@ import java.util.HashMap;
 public class POSTChecklists  implements Command {
 
     @Override
-    public Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
+    public Result<Integer> execute(Connection con, HashMap<String, String> map) {
         int id = 0;
-        final String query = "insert into checklist (name, check_description, duedate) values (?, ?, ?)";
-        PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        String query = "insert into checklist (check_name, check_description, check_duedate) values (?, ?, ?)";
 
-        statement.setString(1, map.get("name"));
-        statement.setString(2, map.get("description"));
+        try (PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 
-        if(map.containsKey("duedate"))
-            statement.setDate(3, Date.valueOf(map.get("duedate")));
-        else statement.setDate(3, null);
+            ResultSet generatedKeys = null;
 
-        statement.executeUpdate();
+            statement.setString(1, map.get("name"));
+            statement.setString(2, map.get("description"));
 
-        ResultSet generatedKeys = statement.getGeneratedKeys();
-        if(generatedKeys.next())
-            id = generatedKeys.getInt(1);
+            if(map.containsKey("duedate"))
+                statement.setDate(3, Date.valueOf(map.get("duedate")));
+            else statement.setDate(3, null);
 
-        con.commit();
+            statement.executeUpdate();
+
+            generatedKeys = statement.getGeneratedKeys();
+            if(generatedKeys.next())
+                id = generatedKeys.getInt(1);
+
+            con.commit();
+        } catch (Exception e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                System.out.println("error - rollback");
+            }
+            System.out.println("error - connection");
+        }
 
         return new Result<>(id);
     }

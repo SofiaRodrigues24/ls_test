@@ -18,6 +18,17 @@ public class Task {
         this.description = description;
     }
 
+    public int getLid() {
+        return lid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     //task_check
     public Task(int id, String name, String description, boolean completed) {
@@ -32,6 +43,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "LID: "+ lid +"\nname: "+name+"\ndescription"+description+"\n";
+        return "\n\t\tLID: "+ lid +"\n\t\tname: "+name+
+                (description==null? "" :"\n\t\tdescription: "+description)+"\n";
     }
 }

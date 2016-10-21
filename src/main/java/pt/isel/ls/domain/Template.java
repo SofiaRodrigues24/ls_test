@@ -9,7 +9,7 @@ public class Template {
     private String description;
 
     private List<Task> templateTasks;
-
+    private List<CheckList> checklists;
 
     public Template(int TID) {
         this.tid = TID;
@@ -21,8 +21,30 @@ public class Template {
         this.description = description;
     }
 
+    public int getTid() {
+        return tid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setTemplateTasks(List<Task> templateTasks) {
+        this.templateTasks = templateTasks;
+    }
+
+    public void setChecklists(List<CheckList> checklists) {
+        this.checklists = checklists;
+    }
+
     @Override
     public String toString() {
-        return "tid: "+ tid +"\nname: "+name+"description: "+description+"tasks: "+templateTasks+"\n";
+        return "tid: "+ tid +"\n\tname: "+name+"\n\tdescription: "+description+"\n\t" +
+                (templateTasks==null?"":"tasks: "+templateTasks)+"\n"+
+                (checklists==null?"":"checklists: "+checklists)+"\n";
     }
 }

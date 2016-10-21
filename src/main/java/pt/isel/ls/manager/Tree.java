@@ -9,8 +9,8 @@ import java.util.Map;
 public class Tree {
     private HashMap<String, TreeNode> root;
 
-    public Tree(HashMap<String, TreeNode> root) {
-        this.root = root;
+    public Tree() {
+        this.root = new HashMap<>();
     }
 
     /**

@@ -3,9 +3,9 @@ package pt.isel.ls;
 import pt.isel.ls.commands.*;
 import pt.isel.ls.commands.GET.*;
 import pt.isel.ls.commands.POST.*;
+import pt.isel.ls.manager.Tree;
 
-
-public class Data {
+public class TreeUtilsTest {
 
     public static String [] templates = {
             "GET/checklists", "GET/checklists/{cid}", "GET/checklists/closed",
@@ -22,4 +22,9 @@ public class Data {
             new POSTTemplates(), new POSTTemplatesTidCreate(), new POSTTemplatesTidTasks()
     };
 
+    public static void initTree(Tree root) {
+        for (int i = 0; i < templates.length; i++) {
+            root.insert(templates[i], commands[i]);
+        }
+    }
 }

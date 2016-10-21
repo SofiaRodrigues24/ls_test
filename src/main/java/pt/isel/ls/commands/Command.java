@@ -11,10 +11,4 @@ import java.util.HashMap;
 
 public interface Command {
     Result execute(Connection con, HashMap<String, String> map) throws SQLException;
-    //TODO : usar con.setAutoCommit(false) para ass transações no execute
-    //TODO: Statement generatedKey retorna a chave gerada
-
-    default DBConnection getConnection() {
-        return new DBConnection(new SQLServerDataSource());
-    }
 }

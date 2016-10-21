@@ -15,26 +15,36 @@ import java.util.List;
 public class GETChecklists implements Command {
 
     @Override
-    public Result<List<CheckList>> execute(Connection con, HashMap<String, String> map) throws SQLException {
-        List<CheckList> checklists = new ArrayList<>();
+    public Result<List<CheckList>> execute(Connection con, HashMap<String, String> map) {
+        List<CheckList> checklists = null;
 
-        con.setAutoCommit(false);
-        final String query = "select * from checklist";
+        String query = "select * from checklist";
 
-        PreparedStatement statement = con.prepareStatement(query);
+        try (PreparedStatement statement = con.prepareStatement(query)){
+            ResultSet rs = statement.executeQuery();
 
-        ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                if(checklists == null)
+                    checklists = new ArrayList<>();
 
-        while(rs.next()) {
-            CheckList c = new CheckList(
-                    rs.getInt("cid"), rs.getString("name"),
-                    rs.getString("check_description"), rs.getDate("duedate"));
-            checklists.add(c);
+                CheckList c = new CheckList(
+                        rs.getInt("cid"), rs.getString("check_name"),
+                        rs.getString("check_description"), rs.getDate("check_duedate")
+                );
 
+                checklists.add(c);
+            }
+
+            con.commit();
+
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                System.out.println("error - rollback");
+            }
+            System.out.println("error - connection");
         }
-
-        con.commit();
-        con.setAutoCommit(true);
 
         return new Result<>(checklists);
     }
