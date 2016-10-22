@@ -30,6 +30,10 @@ public class Task {
         return description;
     }
 
+    public boolean isClosed() {
+        return isClosed;
+    }
+
     //task_check
     public Task(int id, String name, String description, boolean completed) {
         this(id, name, description);

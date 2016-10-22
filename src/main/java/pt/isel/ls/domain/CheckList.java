@@ -36,6 +36,10 @@ public class CheckList {
         this.duedate = duedate;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
     public int getCid() {
         return cid;
     }

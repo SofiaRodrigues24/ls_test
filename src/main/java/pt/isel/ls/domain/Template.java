@@ -21,6 +21,10 @@ public class Template {
         this.description = description;
     }
 
+    public List<Task> getTemplateTasks() {
+        return templateTasks;
+    }
+
     public int getTid() {
         return tid;
     }

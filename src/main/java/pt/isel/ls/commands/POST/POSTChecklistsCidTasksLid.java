@@ -10,7 +10,7 @@ public class POSTChecklistsCidTasksLid implements Command {
 
 
     @Override
-    public Result execute(Connection con, HashMap<String, String> map) {
+    public Result<Integer> execute(Connection con, HashMap<String, String> map) {
         String query = "update task_check set isClosed = ? where cid = ? and lid = ?";
         try (PreparedStatement statement = con.prepareStatement(query)){
 
@@ -31,7 +31,7 @@ public class POSTChecklistsCidTasksLid implements Command {
         }
 
 
-        return new Result("ok");
+        return new Result(Integer.parseInt(map.get("{lid}")));
     }
 
 }

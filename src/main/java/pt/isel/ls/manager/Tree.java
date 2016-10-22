@@ -63,6 +63,8 @@ public class Tree {
 
     private Command searchFor(Request rq, String[] path,  TreeNode root) {
         if(path.length == 0) {
+            if(root == null)
+                return null;
             if(root.isCommand()) {
                 return root.getElem();
             }

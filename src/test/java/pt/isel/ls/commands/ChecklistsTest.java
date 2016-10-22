@@ -25,41 +25,78 @@ public class ChecklistsTest {
     }
 
     /**
-     * test POST /checklists and GET /checklists/{cid}
+     * POST/checklists, POST/checklists/{cid}/tasks,
+     * POST/checklists/{cid}/tasks/{lid} and GET/checklists/{cid}
      * @throws SQLException
      */
     @Test
     public void postchecklists_and_getchecklists() throws SQLException {
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Request rq = new Request(new String[]{"POST", "/checklists/description=tasks+of+the+project&name=ls+project"});
-        Command command = tree.search(rq);
+        Result<Integer> cid = postChecklists();
+        Result<Integer> lid = postChecklistsCidTasks(cid.getResult());
+        Result<Integer> lid1 = postChecklistsCidTasksLid(cid.getResult(), lid.getResult());
+        Result<CheckList> result = getChecklistsCid(cid.getResult());
 
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        Integer id = result.getResult();
-
-        dbConnection.disconnect();
-
-        String str = "/checklists/"+id;
-        DBConnection dbConnection1 = new DBConnection(new SQLServerDataSource());
-        Request rq1 = new Request(new String[]{"GET", str});
-        Command command1 = tree.search(rq1);
-
-        Result<CheckList> result1 = command1.execute(dbConnection1.getConnection(), rq1.getParameters());
-        CheckList checkList = result1.getResult();
+        CheckList checkList = result.getResult();
 
 
         //Assert
-        assertNotNull(rq);
-        assertNotNull(command);
+        assertNotNull(cid);
+        assertNotNull(lid);
         assertNotNull(result);
 
-        assertEquals(2, rq.getParameters().size()); //name and description
-        assertEquals("POST", rq.getMethod());
+        assertEquals(lid.getResult(), lid1.getResult());
+        assertEquals(1, checkList.getTasks().size());
+        assertEquals(lid.getResult(), (Integer)checkList.getTasks().get(0).getLid());
+        assertTrue(checkList.getTasks().get(0).isClosed());
 
-        assertNotNull(rq1);
-        assertNotNull(command);
-        assertEquals(id.intValue(), checkList.getCid());
+    }
 
+    private Result<CheckList> getChecklistsCid(Integer cid) throws SQLException {
+        String str = "/checklists/"+cid;
+        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
+        Request rq = new Request(new String[]{"GET", str});
+        Command command = tree.search(rq);
+
+        Result<CheckList> result = command.execute(dbConnection.getConnection(), rq.getParameters());
+        dbConnection.disconnect();
+        return result;
+
+    }
+
+    private Result<Integer> postChecklistsCidTasksLid(Integer cid, Integer lid) throws SQLException {
+        String str = "/checklists/"+cid+"/tasks/"+lid+"/isClosed=true";
+        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
+        Request rq = new Request(new String[]{"POST", str});
+        Command command = tree.search(rq);
+
+        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
+        dbConnection.disconnect();
+
+        return result;
+    }
+
+    private Result<Integer> postChecklistsCidTasks(Integer cid) throws SQLException {
+        String str = "/checklists/"+cid+"/tasks/name=task&description=buy+milk";
+        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
+        Request rq = new Request(new String[]{"POST", str});
+        Command command = tree.search(rq);
+
+        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
+        dbConnection.disconnect();
+
+        return result;
+    }
+
+    private Result<Integer> postChecklists() throws SQLException {
+        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
+        Request rq = new Request(new String[]{"POST", "/checklists/description=project+tasks&name=ls+project"});
+        Command command = tree.search(rq);
+
+        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
+
+        dbConnection.disconnect();
+
+        return result;
     }
 
 }
