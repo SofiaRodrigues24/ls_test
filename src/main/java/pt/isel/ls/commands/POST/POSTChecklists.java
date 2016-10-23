@@ -13,7 +13,7 @@ public class POSTChecklists  implements Command {
     @Override
     public Result<Integer> execute(Connection con, HashMap<String, String> map) {
         int id = 0;
-        String query = "insert into checklist (check_name, check_description, check_duedate) values (?, ?, ?)";
+        String query = "insert into checklist (check_name, check_description, check_duedate, completed) values (?, ?, ?, ?)";
 
         try (PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 
@@ -21,6 +21,7 @@ public class POSTChecklists  implements Command {
 
             statement.setString(1, map.get("name"));
             statement.setString(2, map.get("description"));
+            statement.setBoolean(4, false);
 
             if(map.containsKey("duedate"))
                 statement.setDate(3, Date.valueOf(map.get("duedate")));

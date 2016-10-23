@@ -34,7 +34,6 @@ public class ChecklistsClosedTest {
     @Test
     public void getchecklistsclosed() throws SQLException {
 
-
         DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
         Request rq = new Request(new String[]{"GET", "/checklists/closed"});
         Command command = tree.search(rq);

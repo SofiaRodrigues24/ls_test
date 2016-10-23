@@ -10,28 +10,12 @@ public class CheckList {
     private String description;
     private Date duedate;
     private boolean completed;
-    private int numberOfTasks;
 
     private List<Task> tasks;
 
 
     public CheckList(int CID) {
         this.cid = CID;
-    }
-
-    public CheckList(String name, String description, Date duedate, boolean completed) {
-        this.name = name;
-        this.description = description;
-        this.duedate = duedate;
-        this.completed = completed;
-    }
-
-    public CheckList(int CID, String name, String description, Date duedate, boolean completed) {
-        this.cid = CID;
-        this.name = name;
-        this.description = description;
-        this.duedate = duedate;
-        this.completed = completed;
     }
 
     public CheckList(int CID, String name, String description) {
@@ -45,16 +29,17 @@ public class CheckList {
         this.duedate = duedate;
     }
 
+    public CheckList(int CID, String name, String description, Date duedate, boolean completed) {
+        this(CID, name, description, duedate);
+        this.completed = completed;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
     public int getCid() {
         return cid;
-    }
-
-    public int getNumberOfTasks() {
-        return numberOfTasks;
-    }
-
-    public void setNumberOfTasks(int numberOfTasks) {
-        this.numberOfTasks = numberOfTasks;
     }
 
     public String getName() {

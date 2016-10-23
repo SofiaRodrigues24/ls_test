@@ -26,7 +26,7 @@ public class GETChecklistsOpenSortedDuedate implements Command{
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                CheckList c = new CheckList(rs.getString("check_name"), rs.getString("check_description"),
+                CheckList c = new CheckList(rs.getInt("cid"),rs.getString("check_name"), rs.getString("check_description"),
                         rs.getDate("check_duedate"), rs.getBoolean("completed"));
                 checkLists.add(c);
             }
