@@ -36,6 +36,7 @@ public class GETChecklistsOpenSortedNoftasks implements Command {
                         rs.getInt("cid"),
                         rs.getString("check_name"),
                         rs.getString("check_description"));
+                c.setNumberOfTasks(rs.getInt("c"));
                 checkLists.add(c);
             }
 

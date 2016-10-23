@@ -10,6 +10,7 @@ public class CheckList {
     private String description;
     private Date duedate;
     private boolean completed;
+    private int numberOfTasks;
 
     private List<Task> tasks;
 
@@ -19,6 +20,14 @@ public class CheckList {
     }
 
     public CheckList(String name, String description, Date duedate, boolean completed) {
+        this.name = name;
+        this.description = description;
+        this.duedate = duedate;
+        this.completed = completed;
+    }
+
+    public CheckList(int CID, String name, String description, Date duedate, boolean completed) {
+        this.cid = CID;
         this.name = name;
         this.description = description;
         this.duedate = duedate;
@@ -36,12 +45,16 @@ public class CheckList {
         this.duedate = duedate;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
     public int getCid() {
         return cid;
+    }
+
+    public int getNumberOfTasks() {
+        return numberOfTasks;
+    }
+
+    public void setNumberOfTasks(int numberOfTasks) {
+        this.numberOfTasks = numberOfTasks;
     }
 
     public String getName() {
@@ -58,6 +71,10 @@ public class CheckList {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public boolean getCompleted(){
+        return completed;
     }
 
     @Override

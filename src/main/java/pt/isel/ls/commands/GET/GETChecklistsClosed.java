@@ -31,7 +31,7 @@ public class GETChecklistsClosed implements Command {
 
                 CheckList c = new CheckList(
                         rs.getInt("cid"), rs.getString("check_name"),
-                        rs.getString("check_description"), rs.getDate("check_duedate")
+                        rs.getString("check_description"), rs.getDate("check_duedate"), rs.getBoolean("completed")
                 );
 
                 checklists.add(c);
