@@ -16,7 +16,7 @@ public class GETChecklists implements Command {
 
     @Override
     public Result<List<CheckList>> execute(Connection con, HashMap<String, String> map) {
-        List<CheckList> checklists = null;
+        List<CheckList> checklists = new ArrayList<>();
 
         String query = "select * from checklist";
 
@@ -24,9 +24,6 @@ public class GETChecklists implements Command {
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                if(checklists == null)
-                    checklists = new ArrayList<>();
-
                 CheckList c = new CheckList(
                         rs.getInt("cid"), rs.getString("check_name"),
                         rs.getString("check_description"), rs.getDate("check_duedate")

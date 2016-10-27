@@ -12,7 +12,7 @@ public class CheckList {
     private boolean completed;
 
     private List<Task> tasks;
-
+    private List<Tag> tags;
 
     public CheckList(int CID) {
         this.cid = CID;
@@ -62,11 +62,16 @@ public class CheckList {
         return completed;
     }
 
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "checklist "+ cid +"\n\tname: "+name+"\n\tdescription: "+description+ "" +
                 ((duedate!=null)?("\n\tduedate: "+ duedate):"")+
-                ((tasks!= null)? ("\n\ttasks: "+tasks):"")
-                +"\n";
+                ((tasks!= null)? ("\n\ttasks: "+tasks):"") +
+                ((tags!= null)? ("\n\ttags: "+tags):"")+
+                "\n";
     }
 }

@@ -18,7 +18,7 @@ public class GETTemplates implements Command {
 
     @Override
     public Result<List<Template>> execute(Connection con, HashMap<String, String> map) {
-        List<Template> templates = null;
+        List<Template> templates = new ArrayList<>();
         String query = "select * from template";
 
         try ( PreparedStatement statement = con.prepareStatement(query)){
@@ -26,9 +26,6 @@ public class GETTemplates implements Command {
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                if(templates == null)
-                    templates = new ArrayList<>();
-
                 templates.add(new Template(
                         rs.getInt("tid"), rs.getString("temp_name"),
                         rs.getString("temp_description"))

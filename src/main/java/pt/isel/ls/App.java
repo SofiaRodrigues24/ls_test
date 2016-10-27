@@ -6,11 +6,9 @@ import pt.isel.ls.commands.*;
 import pt.isel.ls.jbdc.DBConnection;
 import pt.isel.ls.manager.*;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-
 public class App {
 
+    //java -cp "vendor/main/*;build/classes/main" pt.isel.ls.App GET /checklists
     public static void main(String[] args) {
         Tree tree = new Tree();
         setup(tree);

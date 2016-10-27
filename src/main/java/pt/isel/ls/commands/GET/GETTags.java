@@ -1,7 +1,7 @@
 package pt.isel.ls.commands.GET;
 
 import pt.isel.ls.commands.Command;
-import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.domain.Tag;
 import pt.isel.ls.manager.Result;
 
 import java.sql.Connection;
@@ -12,29 +12,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GETChecklistsClosed implements Command {
-
-
+public class GETTags implements Command {
     @Override
-    public Result<List<CheckList>> execute(Connection con, HashMap<String, String> map) {
-        List<CheckList> checklists = new ArrayList<>();
-        String query = "select * from checklist where completed = ?";
+    public Result<List<Tag>> execute(Connection con, HashMap<String, String> map) throws SQLException {
+        List<Tag> tags = new ArrayList<>();
+
+        String query = "select * from tag";
 
         try (PreparedStatement statement = con.prepareStatement(query)){
-
-            statement.setBoolean(1, true);
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                CheckList c = new CheckList(
-                        rs.getInt("cid"), rs.getString("check_name"),
-                        rs.getString("check_description"), rs.getDate("check_duedate"), rs.getBoolean("completed")
+                Tag tag = new Tag(
+                        rs.getInt("gid"), rs.getString("tag_name"),
+                        rs.getInt("color")
                 );
 
-                checklists.add(c);
+                tags.add(tag);
             }
 
             con.commit();
+
         } catch (SQLException e) {
             try {
                 con.rollback();
@@ -44,7 +42,6 @@ public class GETChecklistsClosed implements Command {
             System.out.println("error - connection");
         }
 
-        return new Result<>(checklists);
+        return new Result<>(tags);
     }
-
 }

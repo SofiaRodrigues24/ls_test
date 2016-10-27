@@ -6,13 +6,39 @@ public class Request {
 
     private String method;
     private String path;
+    private String header;
+    private HashMap<String, String> headerOptions;
     private HashMap<String, String> parameters;
 
     public Request(String [] args) {
         this.method = args[0];
         this.path = createPath(args[1]);
+        //TODO:
+        this.header = createHeader(args[2]);
+        this.headerOptions = createHeaderOptions(header);
         this.parameters = createParameters(args[1]);
 
+    }
+
+    private HashMap<String, String> createHeaderOptions(String header) {
+        HashMap<String, String> options = new HashMap<>();
+
+        String[] split = header.split("|");
+        for (String s: split) {
+            String[] pair = s.split(":");
+            options.put(pair[0], pair[1]);
+        }
+
+        return options;
+    }
+
+
+    //TODO: how to write the header option??? ??
+    ///GET /checklists/cid accept:text/plain|accept-language:en-uk
+    private String createHeader(String arg) {
+        if(arg.contains("|"))
+            ;
+        return null;
     }
 
     private HashMap<String, String> createParameters(String arg) {

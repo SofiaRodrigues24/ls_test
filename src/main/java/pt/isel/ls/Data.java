@@ -12,7 +12,9 @@ public class Data {
             "GET/checklists/open/sorted/duedate", "GET/checklists/open/sorted/noftasks",
             "GET/templates", "GET/templates/{tid}",
             "POST/checklists", "POST/checklists/{cid}/tasks", "POST/checklists/{cid}/tasks/{lid}",
-            "POST/templates", "POST/templates/{tid}/create", "POST/templates/{tid}/tasks"
+            "POST/templates", "POST/templates/{tid}/create", "POST/templates/{tid}/tasks",
+            "POST/tags", "GET/tags", "DELETE/tags/{gid}", "POST/checklists/{cid}/tags",
+            "DELETE/checklists/{cid}/tags/{gid}"
     };
 
     public static Command[] commands = {new GETChecklists(), new GETChecklistsCid(), new GETChecklistsClosed(),

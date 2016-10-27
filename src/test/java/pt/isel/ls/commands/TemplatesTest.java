@@ -1,7 +1,6 @@
 package pt.isel.ls.commands;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.TreeUtilsTest;
