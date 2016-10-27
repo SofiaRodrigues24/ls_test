@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 public class POSTTemplatesTidTasks implements Command {
 
-
     @Override
     public Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
         int lid = 0;

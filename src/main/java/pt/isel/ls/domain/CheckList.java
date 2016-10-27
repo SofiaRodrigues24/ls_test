@@ -1,6 +1,9 @@
 package pt.isel.ls.domain;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
 
@@ -13,6 +16,8 @@ public class CheckList {
 
     private List<Task> tasks;
     private List<Tag> tags;
+
+    public CheckList () {}
 
     public CheckList(int CID) {
         this.cid = CID;
@@ -54,16 +59,28 @@ public class CheckList {
         return duedate;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setCid(int cid) {
+        this.cid = cid;
     }
 
-    public boolean getCompleted(){
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDuedate(Date duedate) {
+        this.duedate = duedate;
+    }
+
+    public boolean isCompleted() {
         return completed;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     @Override
@@ -73,5 +90,26 @@ public class CheckList {
                 ((tasks!= null)? ("\n\ttasks: "+tasks):"") +
                 ((tags!= null)? ("\n\ttags: "+tags):"")+
                 "\n";
+    }
+
+    public CheckList create(ResultSet rs) throws SQLException {
+        this.setCid(rs.getInt("cid"));
+        this.setName(rs.getString("check_name"));
+        this.setDescription(rs.getString("check_description"));
+        this.setDuedate(rs.getDate("check_duedate"));
+        this.setCompleted(rs.getBoolean("completed"));
+        return this;
+    }
+
+    public void addTask(ResultSet rs) throws SQLException {
+        if(tasks == null)
+            tasks = new ArrayList<>();
+        tasks.add(new Task().create(rs));
+    }
+
+    public void addTag(ResultSet rs) throws SQLException {
+        if(tags == null)
+            tags = new ArrayList<>();
+        tags.add(new Tag().create(rs));
     }
 }

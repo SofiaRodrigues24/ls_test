@@ -26,10 +26,7 @@ public class GETTemplates implements Command {
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                templates.add(new Template(
-                        rs.getInt("tid"), rs.getString("temp_name"),
-                        rs.getString("temp_description"))
-                );
+                templates.add(new Template().create(rs));
             }
 
             con.commit();

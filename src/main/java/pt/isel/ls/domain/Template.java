@@ -1,7 +1,11 @@
 package pt.isel.ls.domain;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Template {
     private int tid;
@@ -11,6 +15,7 @@ public class Template {
     private List<Task> templateTasks;
     private List<CheckList> checklists;
 
+    public Template () {}
     public Template(int TID) {
         this.tid = TID;
     }
@@ -37,6 +42,18 @@ public class Template {
         return description;
     }
 
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setTemplateTasks(List<Task> templateTasks) {
         this.templateTasks = templateTasks;
     }
@@ -50,5 +67,24 @@ public class Template {
         return "tid: "+ tid +"\n\tname: "+name+"\n\tdescription: "+description+"\n\t" +
                 (templateTasks==null?"":"tasks: "+templateTasks)+"\n"+
                 (checklists==null?"":"checklists: "+checklists)+"\n";
+    }
+
+    public Template create(ResultSet rs) throws SQLException {
+        this.setTid(rs.getInt("tid"));
+        this.setName(rs.getString("temp_name"));
+        this.setDescription(rs.getString("temp_description"));
+        return this;
+    }
+
+    public void addTask(ResultSet rs) throws SQLException {
+        if(templateTasks == null)
+            templateTasks = new ArrayList<>();
+        templateTasks.add(new Task().create(rs));
+    }
+
+    public void addCheckList(ResultSet rs) throws SQLException {
+        if(checklists == null)
+            checklists = new ArrayList<>();
+        checklists.add(new CheckList().create(rs));
     }
 }

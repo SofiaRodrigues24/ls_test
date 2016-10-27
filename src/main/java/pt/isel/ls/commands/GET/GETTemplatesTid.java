@@ -20,8 +20,6 @@ public class GETTemplatesTid implements Command {
     @Override
     public Result<Template> execute(Connection con, HashMap<String, String> map) throws SQLException {
         Template temp = null;
-        List<Task> tasks = null;
-        List<CheckList> checklists = null;
 
         String query = "select * from template where tid = ?";
 
@@ -39,39 +37,21 @@ public class GETTemplatesTid implements Command {
 
             statement.setInt(1, Integer.parseInt(map.get("{tid}")));
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                temp = new Template(rs.getInt("tid"), rs.getString("temp_name"), rs.getString("temp_description"));
+            if(rs.next()) {
+                temp = new Template().create(rs);
             }
 
             statement1.setInt(1, temp.getTid());
             ResultSet rs1 = statement1.executeQuery();
             while (rs1.next()) {
-                if(tasks == null)
-                    tasks = new ArrayList<>();
-
-                tasks.add(
-                        new Task(
-                                rs1.getInt("lid"), rs1.getString("task_name"),
-                                rs1.getString("task_description")
-                        )
-                );
+                temp.addTask(rs1);
             }
-            temp.setTemplateTasks(tasks);
 
             statement2.setInt(1, temp.getTid());
             ResultSet rs2 = statement2.executeQuery();
             while (rs2.next()) {
-                if(checklists == null)
-                    checklists = new ArrayList<>();
-
-                checklists.add(
-                        new CheckList(
-                                rs2.getInt("cid"), rs2.getString("check_name"),
-                                rs2.getString("check_description")
-                        )
-                );
+               temp.addCheckList(rs2);
             }
-            temp.setChecklists(checklists);
 
             con.setAutoCommit(true);
             con.commit();

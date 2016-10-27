@@ -32,11 +32,7 @@ public class GETChecklistsOpenSortedNoftasks implements Command {
             statement.setBoolean(2, false);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                CheckList c = new CheckList(
-                        rs.getInt("cid"),
-                        rs.getString("check_name"),
-                        rs.getString("check_description"));
-                checkLists.add(c);
+                checkLists.add(new CheckList().create(rs));
             }
 
             con.commit();

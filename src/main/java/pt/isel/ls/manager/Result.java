@@ -1,5 +1,7 @@
 package pt.isel.ls.manager;
 
+import java.util.HashMap;
+
 public class Result<E> {
 
     private E result;
@@ -18,4 +20,5 @@ public class Result<E> {
     public void print() {
         System.out.println(result.toString());
     }
+
 }

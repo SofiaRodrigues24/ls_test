@@ -16,19 +16,13 @@ public class GETTags implements Command {
     @Override
     public Result<List<Tag>> execute(Connection con, HashMap<String, String> map) throws SQLException {
         List<Tag> tags = new ArrayList<>();
-
         String query = "select * from tag";
 
         try (PreparedStatement statement = con.prepareStatement(query)){
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                Tag tag = new Tag(
-                        rs.getInt("gid"), rs.getString("tag_name"),
-                        rs.getInt("color")
-                );
-
-                tags.add(tag);
+                tags.add(new Tag().create(rs));
             }
 
             con.commit();

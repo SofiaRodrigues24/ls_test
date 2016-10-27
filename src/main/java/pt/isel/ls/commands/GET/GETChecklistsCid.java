@@ -19,8 +19,6 @@ public class GETChecklistsCid implements Command {
     @Override
     public Result<CheckList> execute(Connection con, HashMap<String, String> map) throws SQLException {
         CheckList checkList = null;
-        List<Task> tasks = null;
-        List<Tag> tags = null;
 
         String query = "select * from checklist where checklist.cid = ?";
 
@@ -39,46 +37,21 @@ public class GETChecklistsCid implements Command {
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                    checkList = new CheckList(
-                            rs.getInt("cid"), rs.getString("check_name"),
-                            rs.getString("check_description"), rs.getDate("check_duedate")
-                    );
+                    checkList = new CheckList().create(rs);
             }
 
             statement1.setInt(1, checkList.getCid());
             ResultSet rs1 = statement1.executeQuery();
             while (rs1.next()) {
-                if(tasks == null)
-                    tasks = new ArrayList<>();
-                 tasks.add(
-                        new Task(
-                                rs1.getInt("lid"), rs1.getString("task_name"),
-                                rs1.getString("task_description"), rs1.getBoolean("isClosed"),
-                                rs1.getDate("task_duedate")
-                        )
-                );
-
+                checkList.addTask(rs1);
             }
-
-            checkList.setTasks(tasks);
 
             statement2.setInt(1, Integer.parseInt(map.get("{cid}")));
             ResultSet rs2 = statement2.executeQuery();
 
-            while (rs1.next()) {
-                if(tags == null)
-                    tags = new ArrayList<>();
-
-                tags.add(
-                        new Tag(
-                                rs2.getInt("gid"),
-                                rs2.getString("tag_name"),
-                                rs2.getInt("color")
-                        )
-                );
+            while (rs2.next()) {
+                checkList.addTag(rs2);
             }
-            checkList.setTags(tags);
-
             con.commit();
             con.setAutoCommit(true);
 

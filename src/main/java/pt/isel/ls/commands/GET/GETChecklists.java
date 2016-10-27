@@ -24,12 +24,7 @@ public class GETChecklists implements Command {
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                CheckList c = new CheckList(
-                        rs.getInt("cid"), rs.getString("check_name"),
-                        rs.getString("check_description"), rs.getDate("check_duedate")
-                );
-
-                checklists.add(c);
+                checklists.add(new CheckList().create(rs));
             }
 
             con.commit();
