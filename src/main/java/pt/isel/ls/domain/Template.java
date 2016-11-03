@@ -1,13 +1,17 @@
 package pt.isel.ls.domain;
 
 
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.json.JSONArray;
+import pt.isel.ls.representation.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Template {
+public class Template extends ObjectRepresentation {
     private int tid;
     private String name;
     private String description;
@@ -18,6 +22,7 @@ public class Template {
     public Template () {}
     public Template(int TID) {
         this.tid = TID;
+        this.templateTasks = new ArrayList<>();
     }
 
     public Template(int TID, String name, String description) {
@@ -42,26 +47,6 @@ public class Template {
         return description;
     }
 
-    public void setTid(int tid) {
-        this.tid = tid;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setTemplateTasks(List<Task> templateTasks) {
-        this.templateTasks = templateTasks;
-    }
-
-    public void setChecklists(List<CheckList> checklists) {
-        this.checklists = checklists;
-    }
-
     @Override
     public String toString() {
         return "tid: "+ tid +"\n\tname: "+name+"\n\tdescription: "+description+"\n\t" +
@@ -69,22 +54,50 @@ public class Template {
                 (checklists==null?"":"checklists: "+checklists)+"\n";
     }
 
-    public Template create(ResultSet rs) throws SQLException {
-        this.setTid(rs.getInt("tid"));
-        this.setName(rs.getString("temp_name"));
-        this.setDescription(rs.getString("temp_description"));
+    public Template populate(ResultSet rs) throws SQLException {
+        this.tid = rs.getInt("tid");
+        this.name = rs.getString("temp_name");
+        this.description = rs.getString("temp_description");
         return this;
     }
 
-    public void addTask(ResultSet rs) throws SQLException {
+    public void populateTasks(ResultSet rs) throws SQLException {
         if(templateTasks == null)
             templateTasks = new ArrayList<>();
-        templateTasks.add(new Task().create(rs));
+        templateTasks.add(new Task().populateTaskTemp(rs));
     }
 
-    public void addCheckList(ResultSet rs) throws SQLException {
+    public void populateChecklists(ResultSet rs) throws SQLException {
         if(checklists == null)
             checklists = new ArrayList<>();
-        checklists.add(new CheckList().create(rs));
+        checklists.add(new CheckList().populate(rs));
+    }
+
+
+    @Override
+    public JSONObject getJsonObject() throws IOException {
+        JSONObject jo = new JSONObject();
+        JSONArray ja = null;
+
+        if(templateTasks.size() != 0) {
+            ja = new JSONArray();
+            for (Task t : templateTasks) {
+                ja.add(t.getJsonObject());
+            }
+        }
+
+        jo.add("class", "template")
+                .add("properties", new JSONObject()
+                        .add("tid", tid)
+                        .add("name", name)
+                        .add("description", description)
+                ).add("entities", ja);
+
+        return jo;
+    }
+
+    @Override
+    public HTML getHtml() {
+        return null;
     }
 }

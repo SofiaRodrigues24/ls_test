@@ -1,13 +1,19 @@
 package pt.isel.ls.domain;
 
 
+
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.json.JSONArray;
+import pt.isel.ls.representation.json.JSONObject;
+
+import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
 
-public class CheckList {
+public class CheckList extends ObjectRepresentation {
     private int cid;
     private String name;
     private String description;
@@ -21,6 +27,7 @@ public class CheckList {
 
     public CheckList(int CID) {
         this.cid = CID;
+        this.tasks = new ArrayList<>();
     }
 
     public CheckList(int CID, String name, String description) {
@@ -59,28 +66,29 @@ public class CheckList {
         return duedate;
     }
 
-    public void setCid(int cid) {
-        this.cid = cid;
+
+
+    public CheckList populate(ResultSet rs) throws SQLException {
+        this.cid = rs.getInt("cid");
+        this.name = rs.getString("check_name");
+        this.description = rs.getString("check_description");
+        this.duedate = rs.getDate("check_duedate");
+        this.completed = rs.getBoolean("completed");
+        this.tasks = new ArrayList<>();
+        this.tags = new ArrayList<>();
+        return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void addTask(ResultSet rs) throws SQLException {
+        tasks.add(new Task().populate(rs));
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void addTag(ResultSet rs) throws SQLException {
+        tags.add(new Tag().populate(rs));
     }
 
-    public void setDuedate(Date duedate) {
-        this.duedate = duedate;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void addTask(Task t) {
+        tasks.add(t);
     }
 
     @Override
@@ -92,24 +100,36 @@ public class CheckList {
                 "\n";
     }
 
-    public CheckList create(ResultSet rs) throws SQLException {
-        this.setCid(rs.getInt("cid"));
-        this.setName(rs.getString("check_name"));
-        this.setDescription(rs.getString("check_description"));
-        this.setDuedate(rs.getDate("check_duedate"));
-        this.setCompleted(rs.getBoolean("completed"));
-        return this;
+
+    @Override
+    public JSONObject getJsonObject() throws IOException {
+
+        JSONObject jo = new JSONObject();
+        JSONArray ja = null;
+
+        if(tasks.size() != 0) {
+            ja = new JSONArray();
+            for (Task t : tasks) {
+                ja.add(t.getJsonObject());
+            }
+        }
+
+
+        jo.add("class", new JSONArray()
+                        .add("checklist"))
+                .add("properties", new JSONObject()
+                        .add("cid", cid)
+                        .add("name", name)
+                        .add("description", description)
+                        .add("isClosed", completed)
+                        .add("duedate", duedate)
+                ).add("entities", ja);
+
+        return jo;
     }
 
-    public void addTask(ResultSet rs) throws SQLException {
-        if(tasks == null)
-            tasks = new ArrayList<>();
-        tasks.add(new Task().create(rs));
-    }
-
-    public void addTag(ResultSet rs) throws SQLException {
-        if(tags == null)
-            tags = new ArrayList<>();
-        tags.add(new Tag().create(rs));
+    @Override
+    public HTML getHtml() {
+        return null;
     }
 }

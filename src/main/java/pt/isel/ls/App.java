@@ -1,37 +1,41 @@
 package pt.isel.ls;
 
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
-import pt.isel.ls.commands.*;
-import pt.isel.ls.jbdc.DBConnection;
-import pt.isel.ls.manager.*;
+import pt.isel.ls.commands.Command;
+import pt.isel.ls.commands.CommandManager;
+import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.domain.Collections;
+import pt.isel.ls.manager.Request;
+import pt.isel.ls.manager.Result;
+import pt.isel.ls.representation.json.JSONObject;
+import pt.isel.ls.representation.json.JSONWriter;
+import pt.isel.ls.manager.Tree;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App {
 
     //java -cp "vendor/main/*;build/classes/main" pt.isel.ls.App GET /checklists
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
         Tree tree = new Tree();
         setup(tree);
 
         Request rq = new Request(args);
-
         Command command = tree.search(rq);
+        CommandManager cmdManager = new CommandManager(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
 
-        Result result = null;
         try {
-            result = command.execute(dbConnection.getConnection(), rq.getParameters());
+
+            Result result = command.execute(cmdManager);
+            result.consumer(cmdManager);
+
         } catch (Exception e) {
-            System.out.println("error - connection");
-        }finally {
-            try {
-                dbConnection.disconnect();
-            } catch (Exception e) {
-                System.out.println("error - disconnect");
-            }
+            e.printStackTrace();
         }
-        result.print();
     }
 
     private static void setup(Tree tree) {

@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.TreeUtilsTest;
 import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.domain.Collections;
 import pt.isel.ls.domain.Task;
 import pt.isel.ls.domain.Template;
 import pt.isel.ls.jbdc.DBConnection;
@@ -25,7 +26,7 @@ public class TemplatesTest {
     static Result<Integer> tid, tid1, tid2, tid3, tid4;
 
     @BeforeClass
-    public static void init() throws SQLException {
+    public static void init() throws Exception {
         tree = new Tree();
         TreeUtilsTest.initTree(tree);
 
@@ -41,7 +42,7 @@ public class TemplatesTest {
      * @throws SQLException
      */
     @Test
-    public void templates_test() throws SQLException {
+    public void templates_test() throws Exception {
         Result<Integer> lid = postTemplatesTidTasks(tid.getResult(), "task+template", "task+template+test");
         Result<Template> template = getTemplatesTid(tid.getResult());
 
@@ -64,10 +65,10 @@ public class TemplatesTest {
      * @throws SQLException
      */
     @Test
-    public void get_templates_test() throws SQLException {
-        Result<List<Template>> result = getTemplates();
+    public void get_templates_test() throws Exception {
+        Result<Collections<Template>> result = getTemplates();
 
-        List<Template> result1 = result.getResult();
+        List<Template> result1 = (List<Template>) result.getResult().getList();
         List<Template> templates = new ArrayList<>();
 
         templates.add(new Template(tid.getResult() ,"test", "template test"));
@@ -88,8 +89,12 @@ public class TemplatesTest {
         }
     }
 
+    /**
+     * POST /templates/tid/create
+     * @throws SQLException
+     */
     @Test
-    public void post_templates_tid_create_test() throws SQLException {
+    public void post_templates_tid_create_test() throws Exception {
         Result<Integer> li1 = postTemplatesTidTasks(tid1.getResult(), "task+template1", "task+template+test");
         Result<Integer> li2 = postTemplatesTidTasks(tid1.getResult(), "task+template2", "task+template+test");
         Result<Integer> li3 = postTemplatesTidTasks(tid1.getResult(), "task+template3", "task+template+test");
@@ -123,75 +128,63 @@ public class TemplatesTest {
 
     /* * ** auxiliary methods* * */
 
-    private static CheckList getChecklistsCid(Integer cid) throws SQLException {
+    private static CheckList getChecklistsCid(Integer cid) throws Exception {
         String str = "/checklists/"+cid;
         Request rq = new Request(new String[]{"GET", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<CheckList> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<CheckList> result = command.execute(new CommandManager(rq));
 
         return result.getResult();
     }
 
-    private static Result<List<Template>> getTemplates() throws SQLException {
+    private static Result<Collections<Template>> getTemplates() throws Exception {
         String str = "/templates";
         Request rq = new Request(new String[]{"GET", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<List<Template>> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Collections<Template>> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
-    private static Result<Template> getTemplatesTid(Integer tid) throws SQLException {
+    private static Result<Template> getTemplatesTid(Integer tid) throws Exception {
         String str = "/templates/"+tid;
         Request rq = new Request(new String[]{"GET", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Template> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Template> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
 
-    private static Result<Integer> postTemplates(String name, String description) throws SQLException {
+    private static Result<Integer> postTemplates(String name, String description) throws Exception {
         String str = "/templates/description="+description+"&name="+name;
         Request rq = new Request(new String[]{"POST", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Integer> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
-    private static Result<Integer> postTemplatesTidCreate(Integer tid) throws SQLException {
-        String str = "/templates/"+tid+"/create";
+    private static Result<Integer> postTemplatesTidCreate(Integer tid) throws Exception {
+        String str = "/templates/"+tid+"/populate";
         Request rq = new Request(new String[]{"POST", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Integer> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
-    private static Result<Integer> postTemplatesTidTasks(Integer tid, String name, String description) throws SQLException {
+    private static Result<Integer> postTemplatesTidTasks(Integer tid, String name, String description) throws Exception {
         String str = "/templates/"+tid+"/tasks/name="+name+"&description="+description;
         Request rq = new Request(new String[]{"POST", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Integer> result = command.execute(new CommandManager(rq));
 
         return result;
     }

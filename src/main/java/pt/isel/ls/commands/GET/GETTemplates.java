@@ -1,7 +1,8 @@
 package pt.isel.ls.commands.GET;
 
 import pt.isel.ls.commands.Command;
-import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.commands.CommandWithConnection;
+import pt.isel.ls.domain.Collections;
 import pt.isel.ls.domain.Template;
 import pt.isel.ls.manager.Result;
 
@@ -13,11 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GETTemplates implements Command {
+public class GETTemplates extends CommandWithConnection {
 
 
     @Override
-    public Result<List<Template>> execute(Connection con, HashMap<String, String> map) {
+    public Result<Collections<Template>> execute(Connection con, HashMap<String, String> map) throws SQLException {
         List<Template> templates = new ArrayList<>();
         String query = "select * from template";
 
@@ -26,20 +27,14 @@ public class GETTemplates implements Command {
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                templates.add(new Template().create(rs));
+                templates.add(new Template().populate(rs));
             }
 
-            con.commit();
-        } catch (SQLException e) {
-            try {
-                con.rollback();
-            } catch (SQLException e1) {
-                System.out.println("error - rollback");
-            }
-            System.out.println("error - connection");
         }
 
-        return new Result<>(templates);
+        Collections<Template> col = new Collections<>("template", templates);
+
+        return new Result<>(col);
     }
 
 }

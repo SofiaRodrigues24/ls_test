@@ -1,7 +1,9 @@
 package pt.isel.ls.commands.GET;
 
 import pt.isel.ls.commands.Command;
+import pt.isel.ls.commands.CommandWithConnection;
 import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.domain.Collections;
 import pt.isel.ls.manager.Result;
 
 import java.sql.Connection;
@@ -11,11 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GETChecklistsOpenSortedDuedate implements Command{
+public class GETChecklistsOpenSortedDuedate extends CommandWithConnection{
 
 
     @Override
-    public Result<ArrayList<CheckList>> execute(Connection con, HashMap<String, String> map) throws SQLException {
+    protected Result<Collections<CheckList>> execute(Connection con, HashMap<String, String> map) throws SQLException {
         ArrayList<CheckList> checkLists = new ArrayList<>();
         String sql = "select * from checklist where completed = ? order by check_duedate asc";
 
@@ -26,15 +28,12 @@ public class GETChecklistsOpenSortedDuedate implements Command{
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                checkLists.add(new CheckList().create(rs));
+                checkLists.add(new CheckList().populate(rs));
             }
 
-            con.commit();
-            con.setAutoCommit(true);
-        }catch (SQLException e){
-            con.rollback();
         }
-        return new Result<>(checkLists);
+        Collections<CheckList> col = new Collections<>("checklist", checkLists);
+        return new Result<>(col);
     }
 
 }

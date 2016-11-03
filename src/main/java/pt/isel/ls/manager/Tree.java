@@ -23,7 +23,13 @@ public class Tree {
         if(!root.containsKey(path[0]))
             root.put(path[0], new TreeNode());
 
-        insertCommand(Arrays.copyOfRange(path, 1, path.length), command, root.get(path[0]));
+
+        if(path.length==1) {
+            root.get(path[0]).setElem(command);
+            root.get(path[0]).setCommand(true);
+            return;
+        }
+            insertCommand(Arrays.copyOfRange(path, 1, path.length), command, root.get(path[0]));
     }
 
     private void insertCommand(String[] strings, Command c, TreeNode root) {
@@ -58,6 +64,8 @@ public class Tree {
         TreeNode method = root.get(rq.getMethod());
         String[] split = rq.getPath().split("/");
 
+        if(split.length==0)
+            return method.getElem();
         return searchFor(rq, Arrays.copyOfRange(split, 1, split.length), method);
     }
 

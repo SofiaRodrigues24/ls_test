@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.TreeUtilsTest;
 import pt.isel.ls.domain.CheckList;
+import pt.isel.ls.domain.Collections;
 import pt.isel.ls.jbdc.DBConnection;
 import pt.isel.ls.manager.Request;
 import pt.isel.ls.manager.Result;
@@ -23,7 +24,7 @@ public class ChecklistsTest {
     static Result<Integer> cid, cid1, cid2, cid3, cid4;
 
     @BeforeClass
-    public static void init() throws SQLException {
+    public static void init() throws Exception {
         tree = new Tree();
         TreeUtilsTest.initTree(tree);
 
@@ -39,7 +40,7 @@ public class ChecklistsTest {
      * @throws SQLException
      */
     @Test
-    public void checklists_test() throws SQLException {
+    public void checklists_test() throws Exception {
         Result<Integer> lid = postChecklistsCidTasks(cid.getResult(), "task+check", "task+check+test");
         Result<Integer> lid1 = postChecklistsCidTasksLid(cid.getResult(), lid.getResult());
         Result<CheckList> result = getChecklistsCid(cid.getResult());
@@ -64,10 +65,10 @@ public class ChecklistsTest {
      * @throws SQLException
      */
     @Test
-    public void get_checklists_test() throws SQLException {
-        Result<List<CheckList>> result = getCheckLists();
+    public void get_checklists_test() throws Exception {
+        Result<Collections<CheckList>> result = getCheckLists();
 
-        List<CheckList> result1 = result.getResult();
+        List<CheckList> result1 = (List<CheckList>) result.getResult().getList();
         List<CheckList> checkLists = new ArrayList<>();
 
         checkLists.add(new CheckList(cid.getResult() ,"tests", "ls project"));
@@ -93,11 +94,11 @@ public class ChecklistsTest {
      * @throws SQLException
      */
     @Test
-    public void get_checklists_open_sorted_duedate_test() throws SQLException {
+    public void get_checklists_open_sorted_duedate_test() throws Exception {
         String [] dates = new String[]{null, "2016-09-24", "2016-10-23", "2016-10-27", "2016-11-25"};
 
-        Result<List<CheckList>> result = getCheckListsOpenSortedDuedate();
-        List<CheckList> checkLists = result.getResult();
+        Result<Collections<CheckList>> result = getCheckListsOpenSortedDuedate();
+        List<CheckList> checkLists = (List<CheckList>)result.getResult().getList();
 
         //Assert
         assertNotNull(result);
@@ -109,75 +110,64 @@ public class ChecklistsTest {
 
 
    /* auxiliary methods */
-    private static Result<List<CheckList>> getCheckLists() throws SQLException {
+    private static Result<Collections<CheckList>> getCheckLists() throws Exception {
         String str = "/checklists";
         Request rq = new Request(new String[]{"GET", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<List<CheckList>> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Collections<CheckList>> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
-     private static Result<CheckList> getChecklistsCid(Integer cid) throws SQLException {
+     private static Result<CheckList> getChecklistsCid(Integer cid) throws Exception {
          String str = "/checklists/"+cid;
          Request rq = new Request(new String[]{"GET", str});
          Command command = tree.search(rq);
 
-         DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-         Result<CheckList> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-         dbConnection.disconnect();
+         Result<CheckList> result = command.execute(new CommandManager(rq));
 
          return result;
 
     }
 
-    private static Result<List<CheckList>> getCheckListsOpenSortedDuedate() throws SQLException {
+    private static Result<Collections<CheckList>> getCheckListsOpenSortedDuedate() throws Exception {
         String str = "/checklists/open/sorted/duedate";
         Request rq = new Request(new String[]{"GET", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<List<CheckList>> checkLists = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Collections<CheckList>> checkLists = command.execute(new CommandManager(rq));
+
 
         return checkLists;
     }
 
-    private static Result<Integer> postChecklists(String name, String description, String duedate) throws SQLException {
+    private static Result<Integer> postChecklists(String name, String description, String duedate) throws Exception {
         String str = "/checklists/description="+description+"&name="+name+(duedate!=null?"&duedate="+duedate:"");
         Request rq = new Request(new String[]{"POST", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Integer> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
-    private static Result<Integer> postChecklistsCidTasks(Integer cid, String name, String description) throws SQLException {
+    private static Result<Integer> postChecklistsCidTasks(Integer cid, String name, String description) throws Exception {
         String str = "/checklists/"+cid+"/tasks/name="+name+"&description="+description;
         Request rq = new Request(new String[]{"POST", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Integer> result = command.execute(new CommandManager(rq));
 
         return result;
     }
 
-    private static Result<Integer> postChecklistsCidTasksLid(Integer cid, Integer lid) throws SQLException {
+    private static Result<Integer> postChecklistsCidTasksLid(Integer cid, Integer lid) throws Exception {
         String str = "/checklists/"+cid+"/tasks/"+lid+"/isClosed=true";
         Request rq = new Request(new String[]{"POST", str});
         Command command = tree.search(rq);
 
-        DBConnection dbConnection = new DBConnection(new SQLServerDataSource());
-        Result<Integer> result = command.execute(dbConnection.getConnection(), rq.getParameters());
-        dbConnection.disconnect();
+        Result<Integer> result = command.execute(new CommandManager(rq));
 
         return result;
     }

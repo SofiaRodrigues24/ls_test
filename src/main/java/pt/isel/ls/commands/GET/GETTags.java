@@ -1,6 +1,8 @@
 package pt.isel.ls.commands.GET;
 
 import pt.isel.ls.commands.Command;
+import pt.isel.ls.commands.CommandWithConnection;
+import pt.isel.ls.domain.Collections;
 import pt.isel.ls.domain.Tag;
 import pt.isel.ls.manager.Result;
 
@@ -12,9 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GETTags implements Command {
+public class GETTags extends CommandWithConnection {
     @Override
-    public Result<List<Tag>> execute(Connection con, HashMap<String, String> map) throws SQLException {
+    protected Result<Collections<Tag>> execute(Connection con, HashMap<String, String> map) throws SQLException {
         List<Tag> tags = new ArrayList<>();
         String query = "select * from tag";
 
@@ -22,20 +24,12 @@ public class GETTags implements Command {
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
-                tags.add(new Tag().create(rs));
+                tags.add(new Tag().populate(rs));
             }
 
-            con.commit();
-
-        } catch (SQLException e) {
-            try {
-                con.rollback();
-            } catch (SQLException e1) {
-                System.out.println("error - rollback");
-            }
-            System.out.println("error - connection");
         }
 
-        return new Result<>(tags);
+        Collections<Tag> col = new Collections<>("tag", tags);
+        return new Result<>(col);
     }
 }

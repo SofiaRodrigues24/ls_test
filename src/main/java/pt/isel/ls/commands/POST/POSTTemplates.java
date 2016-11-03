@@ -1,15 +1,16 @@
 package pt.isel.ls.commands.POST;
 
 import pt.isel.ls.commands.Command;
+import pt.isel.ls.commands.CommandWithConnection;
 import pt.isel.ls.manager.Result;
 
 import java.sql.*;
 import java.util.HashMap;
 
-public class POSTTemplates implements Command {
+public class POSTTemplates extends CommandWithConnection {
 
     @Override
-    public Result<Integer> execute(Connection con, HashMap<String, String> map)  {
+    protected Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
         int id = 0;
         String query = "insert into template (temp_name, temp_description) values (?, ?)";
 
@@ -22,17 +23,12 @@ public class POSTTemplates implements Command {
             if(generatedKeys.next())
                 id = generatedKeys.getInt(1);
 
-            con.commit();
-        } catch (Exception e) {
-            try {
-                con.rollback();
-            } catch (SQLException e1) {
-                System.out.println("error - rollback");
-            }
-            System.out.println("error - connection");
         }
         return new Result<>(id);
 
     }
 
+    protected boolean hasParameters(HashMap<String, String> parameters) {
+        return parameters.containsKey("name") && parameters.containsKey("description");
+    }
 }

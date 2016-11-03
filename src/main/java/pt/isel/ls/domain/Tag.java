@@ -1,9 +1,13 @@
 package pt.isel.ls.domain;
 
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Tag {
+public class Tag extends ObjectRepresentation {
     private int gid;
     private String name;
     private int color;
@@ -20,39 +24,35 @@ public class Tag {
         this.gid = gid;
     }
 
-    public int getGid() {
-        return gid;
-    }
-
-    public void setGid(int gid) {
-        this.gid = gid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
 
     @Override
     public String toString() {
         return "\n\t\tLID: "+ gid +"\n\t\tname: "+name+ "\n\t\tcolor: "+color+"\n";
     }
 
-    public Tag create(ResultSet rs) throws SQLException {
-        this.setGid(rs.getInt("gid"));
-        this.setName(rs.getString("tag_name"));
-        this.setColor(rs.getInt("color"));
+    public Tag populate(ResultSet rs) throws SQLException {
+        this.gid = rs.getInt("gid");
+        this.name = rs.getString("tag_name");
+        this.color = rs.getInt("color");
+
         return this;
+    }
+
+
+    @Override
+    public JSONObject getJsonObject() throws IOException {
+        return new JSONObject()
+                .add("class", "tag")
+                .add("properties",
+                        new JSONObject()
+                                .add("gid", gid)
+                                .add("name", name)
+                                .add("color", color)
+                );
+    }
+
+    @Override
+    public HTML getHtml() {
+        return null;
     }
 }

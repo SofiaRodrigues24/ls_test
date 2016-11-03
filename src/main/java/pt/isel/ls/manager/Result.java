@@ -1,10 +1,12 @@
 package pt.isel.ls.manager;
 
-import java.util.HashMap;
+import pt.isel.ls.commands.CommandManager;
+
+import java.io.IOException;
 
 public class Result<E> {
 
-    private E result;
+    private E  result;
 
     public Result(E result) {
         this.result = result;
@@ -21,4 +23,12 @@ public class Result<E> {
         System.out.println(result.toString());
     }
 
+    public void consumer(CommandManager cmdManager) throws IOException {
+        if(!cmdManager.hasFileName()) {
+            print();
+        }
+        else {
+            cmdManager.createFile(this);
+        }
+    }
 }

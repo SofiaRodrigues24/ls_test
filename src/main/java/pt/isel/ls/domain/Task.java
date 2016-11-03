@@ -1,11 +1,16 @@
 package pt.isel.ls.domain;
 
 
+
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.json.JSONObject;
+
+import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
-public class Task {
+public class Task extends ObjectRepresentation {
     private int lid;
     private String name;
     private String description;
@@ -20,6 +25,18 @@ public class Task {
         this.lid = id;
         this.name = name;
         this.description = description;
+        this.isClosed = false;
+    }
+
+    //task_check
+    public Task(int id, String name, String description, boolean completed) {
+        this(id, name, description);
+        this.isClosed = completed;
+    }
+
+    public Task(int id, String name, String description, boolean completed, Date duedate) {
+        this(id, name, description, completed);
+        this.duedate = duedate;
     }
 
     public int getLid() {
@@ -38,53 +55,47 @@ public class Task {
         return isClosed;
     }
 
-    public void setLid(int lid) {
-        this.lid = lid;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setClosed(boolean closed) {
-        isClosed = closed;
-    }
-
-    public Date getDuedate() {
-        return duedate;
-    }
-
-    public void setDuedate(Date duedate) {
-        this.duedate = duedate;
-    }
-
-    //task_check
-    public Task(int id, String name, String description, boolean completed) {
-        this(id, name, description);
-        this.isClosed = completed;
-    }
-
-    public Task(int id, String name, String description, boolean completed, Date duedate) {
-        this(id, name, description, completed);
-        this.duedate = duedate;
-    }
-
     @Override
     public String toString() {
         return "\n\t\tLID: "+ lid +"\n\t\tname: "+name+
                 (description==null? "" :"\n\t\tdescription: "+description)+"\n";
     }
 
-    public Task create(ResultSet rs) throws SQLException {
-        this.setLid(rs.getInt("lid"));
-        this.setName(rs.getString("task_nme"));
-        this.setDescription(rs.getString("task_description"));
-        this.setClosed(rs.getBoolean("isClosed"));
-        this.setDuedate(rs.getDate("task_duedate"));
+    public Task populate(ResultSet rs) throws SQLException {
+        this.lid = rs.getInt("lid");
+        this.name = rs.getString("task_name");
+        this.description = rs.getString("task_description");
+        this.isClosed =rs.getBoolean("isClosed")? rs.getBoolean("isClosed"):false;
+        this.duedate = rs.getDate("task_duedate");
         return this;
+    }
+
+    public Task populateTaskTemp(ResultSet rs) throws SQLException {
+        this.lid = rs.getInt("lid");
+        this.name = rs.getString("task_name");
+        this.description = rs.getString("task_description");
+        return this;
+    }
+
+
+
+
+    @Override
+    public JSONObject getJsonObject() throws IOException {
+        return new JSONObject()
+                .add("class", "task")
+                .add("properties",
+                        new JSONObject()
+                                .add("lid", lid)
+                                .add("name", name)
+                                .add("description", description)
+                                .add("isClosed", isClosed)
+                                .add("duedate", duedate)
+                );
+    }
+
+    @Override
+    public HTML getHtml() {
+        return null;
     }
 }
