@@ -1,9 +1,6 @@
 package pt.isel.ls.commands;
 
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
-import static org.junit.Assert.*;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.TreeUtilsTest;
@@ -18,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 public class ChecklistsTest {
     static Tree tree;
 
@@ -25,6 +24,9 @@ public class ChecklistsTest {
 
     @BeforeClass
     public static void init() throws Exception {
+
+        DBConnection.init("LS_DBCONN_TEST_SQLSRV");
+
         tree = new Tree();
         TreeUtilsTest.initTree(tree);
 
@@ -112,7 +114,7 @@ public class ChecklistsTest {
    /* auxiliary methods */
     private static Result<Collections<CheckList>> getCheckLists() throws Exception {
         String str = "/checklists";
-        Request rq = new Request(new String[]{"GET", str});
+        Request rq = new Request("GET" + str);
         Command command = tree.search(rq);
 
         Result<Collections<CheckList>> result = command.execute(new CommandManager(rq));
@@ -122,7 +124,7 @@ public class ChecklistsTest {
 
      private static Result<CheckList> getChecklistsCid(Integer cid) throws Exception {
          String str = "/checklists/"+cid;
-         Request rq = new Request(new String[]{"GET", str});
+         Request rq = new Request("GET"+ str);
          Command command = tree.search(rq);
 
          Result<CheckList> result = command.execute(new CommandManager(rq));
@@ -133,7 +135,7 @@ public class ChecklistsTest {
 
     private static Result<Collections<CheckList>> getCheckListsOpenSortedDuedate() throws Exception {
         String str = "/checklists/open/sorted/duedate";
-        Request rq = new Request(new String[]{"GET", str});
+        Request rq = new Request("GET"+ str);
         Command command = tree.search(rq);
 
         Result<Collections<CheckList>> checkLists = command.execute(new CommandManager(rq));
@@ -144,7 +146,7 @@ public class ChecklistsTest {
 
     private static Result<Integer> postChecklists(String name, String description, String duedate) throws Exception {
         String str = "/checklists/description="+description+"&name="+name+(duedate!=null?"&duedate="+duedate:"");
-        Request rq = new Request(new String[]{"POST", str});
+        Request rq = new Request("POST"+ str);
         Command command = tree.search(rq);
 
         Result<Integer> result = command.execute(new CommandManager(rq));
@@ -154,7 +156,7 @@ public class ChecklistsTest {
 
     private static Result<Integer> postChecklistsCidTasks(Integer cid, String name, String description) throws Exception {
         String str = "/checklists/"+cid+"/tasks/name="+name+"&description="+description;
-        Request rq = new Request(new String[]{"POST", str});
+        Request rq = new Request("POST" +str);
         Command command = tree.search(rq);
 
         Result<Integer> result = command.execute(new CommandManager(rq));
@@ -164,7 +166,7 @@ public class ChecklistsTest {
 
     private static Result<Integer> postChecklistsCidTasksLid(Integer cid, Integer lid) throws Exception {
         String str = "/checklists/"+cid+"/tasks/"+lid+"/isClosed=true";
-        Request rq = new Request(new String[]{"POST", str});
+        Request rq = new Request("POST"+ str);
         Command command = tree.search(rq);
 
         Result<Integer> result = command.execute(new CommandManager(rq));

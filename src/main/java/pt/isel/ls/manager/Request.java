@@ -9,7 +9,8 @@ public class Request {
     private HashMap<String, String> parameters;
     private HashMap<String, String> header;
 
-    public Request(String [] args) {
+    public Request(String str) {
+        String[] args = str.split(" ");
         this.method = args[0];
         if(args.length>1) {
             this.path = createPath(args[1]);

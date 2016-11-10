@@ -2,7 +2,14 @@ apply plugin: 'java'
 
 version = '1.0'
 
+task initDB (type: Exec){
+    workingDir '/script'
+    commandLine 'cmd', 'sqlcmd -S ./ -i SQLQuery.sql'
+}
+
 dependencies {
     compile fileTree(dir: 'vendor/main', include: '*.jar')
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
+
+test.dependsOn initDB

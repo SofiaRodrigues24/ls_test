@@ -79,14 +79,15 @@ public class Template extends ObjectRepresentation {
         JSONObject jo = new JSONObject();
         JSONArray ja = null;
 
-        if(templateTasks.size() != 0) {
+        if(templateTasks != null && templateTasks.size() != 0) {
             ja = new JSONArray();
             for (Task t : templateTasks) {
                 ja.add(t.getJsonObject());
             }
         }
 
-        jo.add("class", "template")
+        jo.add("class", new JSONArray()
+                        .add("template"))
                 .add("properties", new JSONObject()
                         .add("tid", tid)
                         .add("name", name)

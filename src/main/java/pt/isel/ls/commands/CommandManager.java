@@ -25,8 +25,7 @@ public class CommandManager {
     }
 
     public Connection getConnection() throws SQLServerException {
-        DBConnection connection = new DBConnection(new SQLServerDataSource());
-        return connection.getConnection();
+        return DBConnection.getConnection();
     }
 
     public Result getResult(Result result) throws IOException {
@@ -48,6 +47,7 @@ public class CommandManager {
     }
 
     public Result getHtml() {
+
         return null;
     }
 
@@ -63,8 +63,7 @@ public class CommandManager {
             res.writer(request.getHeader().get("filename"));
         }else {
             //TODO: passar o filename
-            JSONObject res = (JSONObject)result.getResult();
-            //res.
+            //html
         }
     }
 

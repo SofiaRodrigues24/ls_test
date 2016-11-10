@@ -1,5 +1,6 @@
 package pt.isel.ls.jbdc;
 
+import com.microsoft.sqlserver.jdbc.ISQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -9,38 +10,61 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String INSTANCE_NAME = "SQL_IN";
-    private static final String USER = "SQL_USER";
-    private static final String PASSWORD = "SQL_PASS";
-    private static final String DATABASE_NAME = "SQL_DB";
-    private static final String SERVER_NAME = "SQL_SERVER";
+    private static String variable;
+    private static String serverName;
+    private static String databaseName;
+    private static String user;
+    private static String password;
+    private static SQLServerDataSource dataSource;
 
-    private SQLServerDataSource dataSource;
-    private Connection connection;
 
-    public DBConnection(SQLServerDataSource dataSource) {
-        this.dataSource = dataSource;
+    public static void init(String s) {
+        variable = s;
         setCredentials();
+        setDataSource();
     }
 
-    public void setCredentials() {
-        dataSource.setInstanceName(System.getenv(INSTANCE_NAME));
-        dataSource.setUser(System.getenv(USER));
-        dataSource.setPassword(System.getenv(PASSWORD));
-        dataSource.setDatabaseName(System.getenv(DATABASE_NAME));
-        dataSource.setServerName(System.getenv(SERVER_NAME));
+    public static void setDataSource() {
+        dataSource = new SQLServerDataSource();
+        dataSource.setServerName(serverName);
+        dataSource.setDatabaseName(databaseName);
+        dataSource.setUser(user);
+        dataSource.setPassword(password);
+    }
+
+    public static void setCredentials() {
+        String getenv = System.getenv(variable);
+
+        String[] split = getenv.split(";");
+        for (int i = 0; i < split.length; i++) {
+            setField(i, split[i].split("=")[1]);
+        }
+    }
+
+    private static void setField(int idx, String s) {
+        switch (idx) {
+            case 0:
+                serverName = s;
+                break;
+            case 1:
+                databaseName = s;
+                break;
+            case 2:
+                user = s;
+                break;
+            case 3:
+                password = s;
+                break;
+        }
+    }
+
+    public static Connection getConnection() throws SQLServerException {
+        return dataSource.getConnection();
+    }
+
+    public static void disconnect(Connection con) throws SQLException {
+        con.close();
     }
 
 
-    public SQLServerDataSource getDataSource() {
-        return dataSource;
-    }
-
-    public Connection getConnection() throws SQLServerException {
-        return connection = dataSource.getConnection();
-    }
-
-    public void disconnect() throws SQLException {
-        connection.close();
-    }
 }

@@ -3,6 +3,7 @@ package pt.isel.ls.domain;
 
 
 import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
 
 import java.io.IOException;
@@ -83,7 +84,7 @@ public class Task extends ObjectRepresentation {
     @Override
     public JSONObject getJsonObject() throws IOException {
         return new JSONObject()
-                .add("class", "task")
+                .add("class", new JSONArray().add("task"))
                 .add("properties",
                         new JSONObject()
                                 .add("lid", lid)

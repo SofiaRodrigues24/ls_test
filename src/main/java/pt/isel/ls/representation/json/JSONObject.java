@@ -4,15 +4,16 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class JSONObject implements JSONValue {
 
 
     private List<String> names;
     private List<JSONValue> values;
+
+    private HashMap<String, JSONValue> map;
+
 
     public JSONObject(){
         names = new ArrayList<>();
@@ -57,9 +58,26 @@ public class JSONObject implements JSONValue {
         write.close();
     }
 
+    public List<String> getNames() {
+        return names;
+    }
+
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
+
+    public List<JSONValue> getValues() {
+        return values;
+    }
+
+    public void setValues(List<JSONValue> values) {
+        this.values = values;
+    }
+
     @Override
     public JSONWriter write(JSONWriter writer) throws IOException {
         writer.writeObjectOpen();
+
         Iterator<String> namesIterator = names.iterator();
         Iterator<JSONValue> valuesIterator = values.iterator();
 

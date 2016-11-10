@@ -24,7 +24,7 @@ public class TreeTest {
     @Test
     public void search_for_a_command() {
         //Arrange
-        String [] args = {"POST", "/checklists/description=ls+project&name=ls"};
+        String args = "POST /checklists/description=ls+project&name=ls";
         Request rq = new Request(args);
         Command command = tree.search(rq);
 
@@ -49,7 +49,7 @@ public class TreeTest {
     @Test
     public void nonexistent_command() {
         //Arrange
-        String [] args = {"POST", "/tasks/description=ls+project&name=ls"};
+        String args = "POST /tasks/description=ls+project&name=ls";
         Request rq = new Request(args);
         Command command = tree.search(rq);
 

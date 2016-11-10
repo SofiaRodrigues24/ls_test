@@ -27,6 +27,8 @@ public class TemplatesTest {
 
     @BeforeClass
     public static void init() throws Exception {
+        DBConnection.init("LS_DBCONN_TEST_SQLSRV");
+
         tree = new Tree();
         TreeUtilsTest.initTree(tree);
 
@@ -130,7 +132,7 @@ public class TemplatesTest {
 
     private static CheckList getChecklistsCid(Integer cid) throws Exception {
         String str = "/checklists/"+cid;
-        Request rq = new Request(new String[]{"GET", str});
+        Request rq = new Request("GET "+ str);
         Command command = tree.search(rq);
 
         Result<CheckList> result = command.execute(new CommandManager(rq));
@@ -140,7 +142,7 @@ public class TemplatesTest {
 
     private static Result<Collections<Template>> getTemplates() throws Exception {
         String str = "/templates";
-        Request rq = new Request(new String[]{"GET", str});
+        Request rq = new Request("GET"+ str);
         Command command = tree.search(rq);
 
         Result<Collections<Template>> result = command.execute(new CommandManager(rq));
@@ -150,7 +152,7 @@ public class TemplatesTest {
 
     private static Result<Template> getTemplatesTid(Integer tid) throws Exception {
         String str = "/templates/"+tid;
-        Request rq = new Request(new String[]{"GET", str});
+        Request rq = new Request("GET"+ str);
         Command command = tree.search(rq);
 
         Result<Template> result = command.execute(new CommandManager(rq));
@@ -161,7 +163,7 @@ public class TemplatesTest {
 
     private static Result<Integer> postTemplates(String name, String description) throws Exception {
         String str = "/templates/description="+description+"&name="+name;
-        Request rq = new Request(new String[]{"POST", str});
+        Request rq = new Request("POST"+ str);
         Command command = tree.search(rq);
 
         Result<Integer> result = command.execute(new CommandManager(rq));
@@ -171,7 +173,7 @@ public class TemplatesTest {
 
     private static Result<Integer> postTemplatesTidCreate(Integer tid) throws Exception {
         String str = "/templates/"+tid+"/populate";
-        Request rq = new Request(new String[]{"POST", str});
+        Request rq = new Request("POST" + str);
         Command command = tree.search(rq);
 
         Result<Integer> result = command.execute(new CommandManager(rq));
@@ -181,7 +183,7 @@ public class TemplatesTest {
 
     private static Result<Integer> postTemplatesTidTasks(Integer tid, String name, String description) throws Exception {
         String str = "/templates/"+tid+"/tasks/name="+name+"&description="+description;
-        Request rq = new Request(new String[]{"POST", str});
+        Request rq = new Request("POST"+ str);
         Command command = tree.search(rq);
 
         Result<Integer> result = command.execute(new CommandManager(rq));
