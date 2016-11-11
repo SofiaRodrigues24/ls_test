@@ -1,7 +1,8 @@
 package pt.isel.ls.domain;
 
 
-import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.HtmlArray;
+import pt.isel.ls.representation.html.HtmlObject;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
 
@@ -51,7 +52,17 @@ public class Collections<E> extends ObjectRepresentation {
    }
 
    @Override
-   public HTML getHtml() {
-      return null;
+   public HtmlObject getHtml() {
+      HtmlObject ho = new HtmlObject();
+
+      HtmlArray ha = new HtmlArray();
+      Iterator<? extends ObjectRepresentation> iter = list.iterator();
+      while (iter.hasNext()) {
+         ha.add(iter.next().getHtml());
+      }
+
+      ho.add(ha);
+
+      return ho;
    }
 }

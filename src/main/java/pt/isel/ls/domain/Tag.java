@@ -1,6 +1,6 @@
 package pt.isel.ls.domain;
 
-import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.*;
 import pt.isel.ls.representation.json.JSONObject;
 
 import java.io.IOException;
@@ -52,7 +52,11 @@ public class Tag extends ObjectRepresentation {
     }
 
     @Override
-    public HTML getHtml() {
-        return null;
+    public HtmlObject getHtml() {
+        HtmlObject ho = new HtmlObject();
+        ho.add(new HtmlNumber("gid", gid));
+        ho.add(new HtmlString("name", name));
+        ho.add(new HtmlNumber("color", color));
+        return ho;
     }
 }

@@ -2,7 +2,7 @@ package pt.isel.ls.domain;
 
 
 
-import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.*;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
 
@@ -129,7 +129,13 @@ public class CheckList extends ObjectRepresentation {
     }
 
     @Override
-    public HTML getHtml() {
-        return null;
+    public HtmlObject getHtml() {
+        HtmlObject ho = new HtmlObject();
+        ho.add(new HtmlNumber("cid", cid));
+        ho.add(new HtmlString("name", name));
+        ho.add(new HtmlString("description", description));
+        ho.add(new HtmlBoolean("isClosed", completed));
+        ho.add(new HtmlDuedate("duedate", duedate));
+        return ho;
     }
 }

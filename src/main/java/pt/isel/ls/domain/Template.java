@@ -1,7 +1,7 @@
 package pt.isel.ls.domain;
 
 
-import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.*;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
 
@@ -98,7 +98,11 @@ public class Template extends ObjectRepresentation {
     }
 
     @Override
-    public HTML getHtml() {
-        return null;
+    public HtmlObject getHtml() {
+        HtmlObject ho = new HtmlObject();
+        ho.add(new HtmlNumber("tid", tid));
+        ho.add(new HtmlString("name", name));
+        ho.add(new HtmlString("description", description));
+        return ho;
     }
 }
