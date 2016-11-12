@@ -1,12 +1,12 @@
 package pt.isel.ls.commands;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import pt.isel.ls.domain.ObjectRepresentation;
 import pt.isel.ls.jbdc.DBConnection;
-import pt.isel.ls.representation.json.JSONObject;
 import pt.isel.ls.manager.Request;
 import pt.isel.ls.manager.Result;
+import pt.isel.ls.representation.html.HtmlObject;
+import pt.isel.ls.representation.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -46,9 +46,9 @@ public class CommandManager {
         return new Result<JSONObject>(res);
     }
 
-    public Result getHtml() {
-
-        return null;
+    public Result getHtml(Result result) {
+        HtmlObject obj = ((ObjectRepresentation)result.getResult()).getHtml();
+        return new Result<HtmlObject>(obj);
     }
 
     public boolean hasFileName() {

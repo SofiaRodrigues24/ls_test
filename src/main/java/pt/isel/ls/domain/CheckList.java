@@ -66,6 +66,8 @@ public class CheckList extends ObjectRepresentation {
         return duedate;
     }
 
+    public boolean getCompleted(){return completed;}
+
 
 
     public CheckList populate(ResultSet rs) throws SQLException {

@@ -15,6 +15,6 @@ public abstract class ObjectRepresentation {
     public String toString() {
         if(jsonObject != null)
             jsonObject.toString();
-        return null; //html case
+        return (html!=null)? html.toString(): null;
     }
 }

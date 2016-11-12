@@ -29,4 +29,13 @@ public class HtmlArray implements HtmlValue {
     public HTML getHtmlObj() {
         return null;
     }
+
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        for(HtmlValue val : values){
+            String s = val.toString();
+            sb.append(s+"\n");
+        }
+        return sb.toString();
+    }
 }

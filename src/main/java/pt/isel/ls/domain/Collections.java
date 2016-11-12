@@ -3,10 +3,12 @@ package pt.isel.ls.domain;
 
 import pt.isel.ls.representation.html.HtmlArray;
 import pt.isel.ls.representation.html.HtmlObject;
+import pt.isel.ls.representation.html.HtmlValue;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class Collections<E> extends ObjectRepresentation {
    @Override
    public HtmlObject getHtml() {
       HtmlObject ho = new HtmlObject();
-
+      List<HtmlValue> html = new ArrayList<>();
       HtmlArray ha = new HtmlArray();
       Iterator<? extends ObjectRepresentation> iter = list.iterator();
       while (iter.hasNext()) {
@@ -62,6 +64,8 @@ public class Collections<E> extends ObjectRepresentation {
       }
 
       ho.add(ha);
+
+
 
       return ho;
    }

@@ -105,4 +105,8 @@ public class Task extends ObjectRepresentation {
         ho.add(new HtmlDuedate("duedate", duedate));
         return ho;
     }
+
+    public Date getDuedate() {
+        return duedate;
+    }
 }

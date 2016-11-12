@@ -20,7 +20,7 @@ public class HtmlFile {
         writer = new BufferedWriter(new FileWriter(filename+".html"));
         title = filename;
         tables = new ArrayList<>();
-        //startHtml();
+
     }
     public HtmlFile(){
         tables = new ArrayList<>();
@@ -34,35 +34,48 @@ public class HtmlFile {
         tables.add(table);
     }
     protected void startHtml() throws IOException {
-        //writer.write("<!DOCTYPE html>\n");
-        sb.append("<!DOCTYPE html>\n");
-        //writer.write("<html lang=en>\n");
-        sb.append("<html lang=en>\n");
-        //writer.write("<head> \n");
-        sb.append("<head> \n");
-        //writer.write("<title> " + title + "</title>\n");
-        sb.append("<title> " + title + "</title>\n");
-        //writer.write("</head>\n");
-        sb.append("</head>\n");
-        //writer.write("<body>\n");
-        sb.append("<body>\n");
+        if(writer!=null){
+            writer.write("<!DOCTYPE html>\n");
+            writer.write("<html lang=en>\n");
+            writer.write("<head> \n");
+            writer.write("<title> " + title + "</title>\n");
+            writer.write("</head>\n");
+            writer.write("<body>\n");
+        }else {
+            sb.append("<!DOCTYPE html>\n");
+            sb.append("<html lang=en>\n");
+            sb.append("<head> \n");
+            sb.append("<title> " + title + "</title>\n");
+            sb.append("</head>\n");
+            sb.append("<body>\n");
+        }
     }
 
     public void print() throws IOException{
         startHtml();
         for(HtmlTable table : tables){
-            //table.print(writer);
-            sb.append(table.getTable());
+            if(writer!=null){
+                table.print(writer);
+            }else{
+                sb.append(table.getTable());
+            }
+
+
         }
         closeFile();
     }
 
     private void closeFile() throws IOException {
-        sb.append("</body>\n");
-        sb.append("</html>");
-        //writer.write("</body>\n");
-        //writer.write("</html>");
-        //writer.close();
+        if(writer!=null){
+            writer.write("</body>\n");
+            writer.write("</html>");
+            writer.close();
+        }else{
+            sb.append("</body>\n");
+            sb.append("</html>");
+        }
+
+
     }
 
     public String getFileString() throws IOException {

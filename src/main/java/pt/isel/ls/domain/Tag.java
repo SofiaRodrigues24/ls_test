@@ -59,4 +59,16 @@ public class Tag extends ObjectRepresentation {
         ho.add(new HtmlNumber("color", color));
         return ho;
     }
+
+    public int getGid() {
+        return gid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getColor() {
+        return color;
+    }
 }
