@@ -50,7 +50,6 @@ public class Tag extends ObjectRepresentation {
         this.gid = rs.getInt("gid");
         this.name = rs.getString("tag_name");
         this.color = rs.getInt("color");
-
         return this;
     }
 

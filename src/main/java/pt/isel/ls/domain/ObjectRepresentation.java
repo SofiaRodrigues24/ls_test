@@ -6,7 +6,7 @@ import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 
-public abstract class ObjectRepresentation {
+public abstract class ObjectRepresentation<E> {
     protected JSONObject jsonObject;
     protected HTML html;
     public abstract JSONObject getJsonObject() throws IOException;
