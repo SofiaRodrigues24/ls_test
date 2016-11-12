@@ -24,6 +24,17 @@ public class Tag extends ObjectRepresentation {
         this.gid = gid;
     }
 
+    public int getGid() {
+        return gid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getColor() {
+        return color;
+    }
 
     @Override
     public String toString() {

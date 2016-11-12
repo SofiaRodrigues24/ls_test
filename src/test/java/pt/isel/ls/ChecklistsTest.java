@@ -1,11 +1,15 @@
-package pt.isel.ls.commands;
+package pt.isel.ls;
 
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.TreeUtilsTest;
+import pt.isel.ls.commands.Command;
+import pt.isel.ls.commands.CommandManager;
 import pt.isel.ls.domain.CheckList;
 import pt.isel.ls.domain.Collections;
+import pt.isel.ls.domain.Tag;
+import pt.isel.ls.domain.Task;
 import pt.isel.ls.jbdc.DBConnection;
 import pt.isel.ls.manager.Request;
 import pt.isel.ls.manager.Result;
@@ -17,6 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("unchecked")
 public class ChecklistsTest {
     static Tree tree;
 
@@ -110,67 +115,102 @@ public class ChecklistsTest {
         }
     }
 
+    /**
+     * POST /tags, POST /checklists{cid}/tags
+     */
+    @Test
+    public void post_tag_test() throws Exception {
+        Result<Integer> tag1 = postTags("tag1", 1);
+        Result<Integer> tag2 = postTags("tag2", 3);
+        Result<Integer> cid = postChecklistsCidTags(cid2.getResult(), tag1.getResult());
+        Result<Integer> cid1 = postChecklistsCidTags(cid2.getResult(), tag2.getResult());
 
-   /* auxiliary methods */
-    private static Result<Collections<CheckList>> getCheckLists() throws Exception {
-        String str = "/checklists";
-        Request rq = new Request("GET" + str);
-        Command command = tree.search(rq);
+        Result<CheckList> result = getChecklistsCid(cid.getResult());
 
-        Result<Collections<CheckList>> result = command.execute(new CommandManager(rq));
+        CheckList checklist = result.getResult();
+        List<Tag> tags = checklist.getTags();
 
-        return result;
+        assertEquals(cid2.getResult(), cid.getResult());
+        assertEquals(cid2.getResult(), cid1.getResult());
+
+        assertEquals(2, tags.size());
+
+        assertEquals("tag1", tags.get(0).getName());
+        assertEquals(tag1.getResult().intValue(), tags.get(0).getGid());
+        assertEquals(1, tags.get(0).getColor());
+
+        assertEquals("tag2", tags.get(1).getName());
+        assertEquals(tag2.getResult().intValue(), tags.get(1).getGid());
+        assertEquals(3, tags.get(1).getColor());
+
     }
 
+    /* auxiliary methods */
+    private Result<Integer> postChecklistsCidTags(Integer cid, Integer gid) throws Exception {
+        String str = "/checklists/"+cid+"/tags/gid="+gid;
+        Request rq = new Request("POST "+str);
+        Command command = tree.search(rq);
+
+        return (Result<Integer>)command.execute(new CommandManager(rq));
+    }
+
+
+    private Result<Integer> postTags(String name, int color) throws Exception {
+        String str = "/tags/name="+name+"&color="+color;
+        Request rq = new Request("POST "+str);
+        Command command = tree.search(rq);
+
+        return  (Result<Integer>)command.execute(new CommandManager(rq));
+    }
+
+
+    private static Result<Collections<CheckList>> getCheckLists() throws Exception {
+        String str = "/checklists accept:text/plain";
+        Request rq = new Request("GET " + str);
+        Command command = tree.search(rq);
+
+        return  (Result<Collections<CheckList>>) command.execute(new CommandManager(rq));
+    }
+
+
+
      private static Result<CheckList> getChecklistsCid(Integer cid) throws Exception {
-         String str = "/checklists/"+cid;
-         Request rq = new Request("GET"+ str);
+         String str = "/checklists/"+cid +" accept:text/plain";
+         Request rq = new Request("GET "+ str);
          Command command = tree.search(rq);
 
-         Result<CheckList> result = command.execute(new CommandManager(rq));
-
-         return result;
-
+        return  (Result<CheckList>) command.execute(new CommandManager(rq));
     }
 
     private static Result<Collections<CheckList>> getCheckListsOpenSortedDuedate() throws Exception {
-        String str = "/checklists/open/sorted/duedate";
-        Request rq = new Request("GET"+ str);
+        String str = "/checklists/open/sorted/duedate accept:text/plain";
+        Request rq = new Request("GET "+ str);
         Command command = tree.search(rq);
 
-        Result<Collections<CheckList>> checkLists = command.execute(new CommandManager(rq));
-
-
-        return checkLists;
+        return  (Result<Collections<CheckList>>) command.execute(new CommandManager(rq));
     }
 
     private static Result<Integer> postChecklists(String name, String description, String duedate) throws Exception {
         String str = "/checklists/description="+description+"&name="+name+(duedate!=null?"&duedate="+duedate:"");
-        Request rq = new Request("POST"+ str);
+        Request rq = new Request("POST "+ str);
         Command command = tree.search(rq);
 
-        Result<Integer> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return (Result<Integer>)command.execute(new CommandManager(rq));
     }
 
     private static Result<Integer> postChecklistsCidTasks(Integer cid, String name, String description) throws Exception {
         String str = "/checklists/"+cid+"/tasks/name="+name+"&description="+description;
-        Request rq = new Request("POST" +str);
+        Request rq = new Request("POST " +str);
         Command command = tree.search(rq);
 
-        Result<Integer> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return (Result<Integer>)command.execute(new CommandManager(rq));
     }
 
     private static Result<Integer> postChecklistsCidTasksLid(Integer cid, Integer lid) throws Exception {
         String str = "/checklists/"+cid+"/tasks/"+lid+"/isClosed=true";
-        Request rq = new Request("POST"+ str);
+        Request rq = new Request("POST "+ str);
         Command command = tree.search(rq);
 
-        Result<Integer> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return (Result<Integer>)command.execute(new CommandManager(rq));
     }
 }

@@ -21,7 +21,10 @@ public class POSTChecklistsCidTasksLid extends CommandWithConnection {
         }
 
 
-        return new Result(Integer.parseInt(map.get("{lid}")));
+        Result<Integer> res = new Result<>(Integer.parseInt(map.get("{lid}")));
+
+        //return new Result<Integer>(Integer.parseInt(map.get("{lid}")));
+        return res;
     }
 
     protected boolean hasParameters(HashMap<String, String> parameters) {

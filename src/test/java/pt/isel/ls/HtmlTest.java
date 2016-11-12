@@ -1,4 +1,4 @@
-package pt.isel.ls.commands;
+package pt.isel.ls;
 
 import org.junit.Test;
 import pt.isel.ls.domain.CheckList;

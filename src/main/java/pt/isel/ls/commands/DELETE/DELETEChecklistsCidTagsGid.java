@@ -13,7 +13,7 @@ public class DELETEChecklistsCidTagsGid extends CommandWithConnection{
 
 
     @Override
-    protected Result execute(Connection con, HashMap<String, String> map) throws SQLException {
+    protected Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
         String query = "delete from tags_checklists where cid = ? and gid = ?";
 
         try(PreparedStatement statement = con.prepareStatement(query)) {

@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 public class App {
 
-    //java -cp "vendor/main/*;build/classes/main" pt.isel.ls.App GET /checklists
+    //java -Xlint:unchecked -cp "vendor/main/*;build/classes/main" pt.isel.ls.App GET /checklists
     public static void main(String[] args) throws IOException {
 
        DBConnection.init("LS_DBCONN_APP_SQLSRV");

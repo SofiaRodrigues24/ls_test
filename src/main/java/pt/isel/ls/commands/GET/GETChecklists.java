@@ -31,7 +31,7 @@ public class GETChecklists extends CommandWithConnection {
         }
 
 
-        Collections<CheckList> col = new Collections("checklist", checklists);
+        Collections<CheckList> col = (Collections<CheckList>) new Collections("checklist", checklists);
         return new Result<>(col);
     }
 

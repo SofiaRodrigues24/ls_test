@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class DELETETagsGid extends CommandWithConnection {
 
     @Override
-    protected Result execute(Connection con, HashMap<String, String> map) throws SQLException {
+    protected Result<Integer> execute(Connection con, HashMap<String, String> map) throws SQLException {
         String query = "delete from tag where gid = ?";
 
         try(PreparedStatement statement = con.prepareStatement(query)) {

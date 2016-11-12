@@ -67,6 +67,9 @@ public class CheckList extends ObjectRepresentation {
     }
 
 
+    public List<Tag> getTags() {
+        return tags;
+    }
 
     public CheckList populate(ResultSet rs) throws SQLException {
         this.cid = rs.getInt("cid");

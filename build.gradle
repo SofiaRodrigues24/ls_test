@@ -1,15 +1,49 @@
+import java.lang.*
 apply plugin: 'java'
 
 version = '1.0'
+def LS_TEST = 'LS_DBCONN_TEST_SQLSRV'
+def LS_APP = 'LS_DBCONN_APP_SQLSRV'
 
-task initDB (type: Exec){
-    workingDir '/script'
-    commandLine 'cmd', 'sqlcmd -S ./ -i SQLQuery.sql'
+task initDB(type:Exec){
+    workingDir './'
+    commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i tables.sql';
 }
+
+task dropTables(type:Exec) {
+    workingDir './'
+    commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i drop.sql';
+}
+
+def getCommand(String str) {
+    String serverName, dataBase, user, password;
+    String lsTest = System.getenv(str)
+    String [] splitTest = lsTest.split(";");
+
+    serverName = splitTest[0].split("=")[1];
+    dataBase = splitTest[1].split("=")[1];
+    user = splitTest[2].split("=")[1];
+    password = splitTest[3].split("=")[1];
+
+    String cmdTest = 'sqlcmd -S ' +serverName+ ' -d ' +dataBase+ ' -U ' +user+ ' -P ' +password;
+    return cmdTest
+}
+
+
 
 dependencies {
     compile fileTree(dir: 'vendor/main', include: '*.jar')
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
 
-test.dependsOn initDB
+//compileJava {
+//    options.compilerArgs << '-Xlint:unchecked'
+//    options.fork = true
+//    options.forkOptions.executable = 'javac'
+//}
+//
+//compileTestJava {
+//    options.compilerArgs << '-Xlint:unchecked'
+//}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:unchecked']

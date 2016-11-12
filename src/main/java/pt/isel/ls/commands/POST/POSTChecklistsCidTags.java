@@ -14,21 +14,16 @@ public class POSTChecklistsCidTags extends CommandWithConnection {
         int id = 0;
         String query = "insert into tags_checklists (cid, gid) values (?, ?)";
 
-        try(PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            ResultSet generatedKeys = null;
-            statement.setInt(1, Integer.parseInt(map.get("{cid}")));
+        try(PreparedStatement statement = con.prepareStatement(query)) {
+            id = Integer.parseInt(map.get("{cid}"));
+            statement.setInt(1, id);
             statement.setInt(2, Integer.parseInt(map.get("gid")));
             statement.executeUpdate();
-
-            generatedKeys = statement.getGeneratedKeys();
-            if(generatedKeys.next())
-                id = generatedKeys.getInt(1);
-
         }
         return new Result<>(id);
     }
 
     protected boolean hasParameters(HashMap<String, String> parameters) {
-        return parameters.containsKey("{gid}") && parameters.containsKey("cid");
+        return parameters.containsKey("gid") && parameters.containsKey("{cid}");
     }
 }

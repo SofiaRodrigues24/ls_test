@@ -1,9 +1,9 @@
-package pt.isel.ls.commands;
+package pt.isel.ls;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pt.isel.ls.TreeUtilsTest;
+import pt.isel.ls.commands.Command;
+import pt.isel.ls.commands.CommandManager;
 import pt.isel.ls.domain.CheckList;
 import pt.isel.ls.domain.Collections;
 import pt.isel.ls.domain.Task;
@@ -20,6 +20,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@SuppressWarnings("unchecked")
 public class TemplatesTest {
     static Tree tree;
 
@@ -131,63 +132,54 @@ public class TemplatesTest {
     /* * ** auxiliary methods* * */
 
     private static CheckList getChecklistsCid(Integer cid) throws Exception {
-        String str = "/checklists/"+cid;
+        String str = "/checklists/"+cid + " accept:text/plain";
         Request rq = new Request("GET "+ str);
         Command command = tree.search(rq);
 
-        Result<CheckList> result = command.execute(new CommandManager(rq));
+        Result<CheckList> result = (Result<CheckList>) command.execute(new CommandManager(rq));
 
         return result.getResult();
     }
 
     private static Result<Collections<Template>> getTemplates() throws Exception {
-        String str = "/templates";
-        Request rq = new Request("GET"+ str);
+        String str = "/templates accept:text/plain";
+        Request rq = new Request("GET "+ str);
         Command command = tree.search(rq);
 
-        Result<Collections<Template>> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return  (Result<Collections<Template>>) command.execute(new CommandManager(rq));
     }
 
     private static Result<Template> getTemplatesTid(Integer tid) throws Exception {
-        String str = "/templates/"+tid;
-        Request rq = new Request("GET"+ str);
+        String str = "/templates/"+tid +" accept:text/plain";
+        Request rq = new Request("GET "+ str);
         Command command = tree.search(rq);
 
-        Result<Template> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return (Result<Template>)command.execute(new CommandManager(rq));
     }
 
 
     private static Result<Integer> postTemplates(String name, String description) throws Exception {
         String str = "/templates/description="+description+"&name="+name;
-        Request rq = new Request("POST"+ str);
+        Request rq = new Request("POST "+ str);
         Command command = tree.search(rq);
 
-        Result<Integer> result = command.execute(new CommandManager(rq));
+        return  (Result<Integer>)command.execute(new CommandManager(rq));
 
-        return result;
     }
 
     private static Result<Integer> postTemplatesTidCreate(Integer tid) throws Exception {
-        String str = "/templates/"+tid+"/populate";
-        Request rq = new Request("POST" + str);
+        String str = "/templates/"+tid+"/create";
+        Request rq = new Request("POST " + str);
         Command command = tree.search(rq);
 
-        Result<Integer> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return  (Result<Integer>)command.execute(new CommandManager(rq));
     }
 
     private static Result<Integer> postTemplatesTidTasks(Integer tid, String name, String description) throws Exception {
         String str = "/templates/"+tid+"/tasks/name="+name+"&description="+description;
-        Request rq = new Request("POST"+ str);
+        Request rq = new Request("POST "+ str);
         Command command = tree.search(rq);
 
-        Result<Integer> result = command.execute(new CommandManager(rq));
-
-        return result;
+        return  (Result<Integer>)command.execute(new CommandManager(rq));
     }
 }
