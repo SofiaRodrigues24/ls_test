@@ -2,71 +2,52 @@ package pt.isel.ls.representation.json;
 
 
 import java.io.IOException;
-import java.io.Writer;
 
 public class JSONWriter {
 
-    protected Writer writer;
+    protected StringBuilder stringBuilder;
 
-    public JSONWriter() {}
-
-    public JSONWriter(Writer writer) {
-        this.writer = writer;
+    public JSONWriter() {
+        this.stringBuilder = new StringBuilder();
     }
 
-    protected String writeString(String string) throws IOException {
-        if(writer != null) {
-            writer.write('"');
+    protected void writeString(String string) throws IOException {
+            stringBuilder.append('"');
             writeJsonString(string);
-            writer.write('"');
-        }
-        return "\""+string+"\"";
+            stringBuilder.append('"');
     }
 
-    protected String writeJsonString(String string) throws IOException {
-        if(writer != null)
-            writer.write(string);
-        return string;
+    protected void writeJsonString(String string) throws IOException {
+        stringBuilder.append(string);
     }
 
-    protected String writeArrayOpen() throws IOException {
-        if(writer != null)
-            writer.write('[');
-        return "[";
+    protected void writeArrayOpen() throws IOException {
+        stringBuilder.append('[');
     }
 
-    protected String writeArrayClose() throws IOException {
-        if(writer != null)
-            writer.write(']');
-        return "]";
+    protected void writeArrayClose() throws IOException {
+        stringBuilder.append("]");
 
     }
 
-    protected String writeObjectOpen() throws IOException {
-        if(writer != null)
-            writer.write('{');
-        return "{";
+    protected void writeObjectOpen() throws IOException {
+       stringBuilder.append("{");
     }
 
-    protected String writeObjectClose() throws IOException {
-        if(writer != null)
-            writer.write('}');
-        return "}";
+    protected void writeObjectClose() throws IOException {
+        stringBuilder.append("}");
     }
 
-    protected String writeMemberSeparator() throws IOException {
-        if(writer != null)
-            writer.write(':');
-        return ":";
+    protected void writeMemberSeparator() throws IOException {
+        stringBuilder.append(":");
     }
 
-    public String writeSeparator() throws IOException {
-        if(writer != null)
-            writer.write(',');
-        return ",";
+    public void writeSeparator() throws IOException {
+        stringBuilder.append(",");
     }
 
-    public void close() throws IOException {
-        writer.close();
+    @Override
+    public String toString() {
+        return stringBuilder.toString();
     }
 }

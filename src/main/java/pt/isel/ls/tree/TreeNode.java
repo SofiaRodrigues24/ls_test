@@ -1,4 +1,4 @@
-package pt.isel.ls.manager;
+package pt.isel.ls.tree;
 
 import pt.isel.ls.commands.Command;
 

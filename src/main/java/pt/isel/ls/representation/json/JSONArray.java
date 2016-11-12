@@ -44,29 +44,4 @@ public class JSONArray implements JSONValue {
         writer.writeArrayClose();
         return writer;
     }
-
-    @Override
-    public String toString() {
-        String res = "";
-        JSONWriter writer = new JSONWriter();
-        try {
-            res += writer.writeArrayOpen();
-            Iterator<JSONValue> iter = values.iterator();
-
-            if(iter.hasNext()) {
-                res += iter.next().toString();
-                while (iter.hasNext()) {
-                    res += writer.writeSeparator();
-                    res += iter.next().toString();
-                }
-            }
-
-            res += writer.writeArrayClose();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-        return res;
-    }
 }

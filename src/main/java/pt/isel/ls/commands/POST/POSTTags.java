@@ -1,9 +1,8 @@
 package pt.isel.ls.commands.POST;
 
 
-import pt.isel.ls.commands.Command;
 import pt.isel.ls.commands.CommandWithConnection;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.domain.Result;
 
 import java.sql.*;
 import java.util.HashMap;

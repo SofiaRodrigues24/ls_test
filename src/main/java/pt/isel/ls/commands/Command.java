@@ -1,10 +1,9 @@
 package pt.isel.ls.commands;
 
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.manager.CommandManager;
+import pt.isel.ls.domain.Result;
 
-import java.sql.SQLException;
 
-
-public interface Command<E> {
-    Result<E> execute(CommandManager manager) throws Exception;
+public interface Command {
+    Result execute(CommandManager manager) throws Exception;
 }

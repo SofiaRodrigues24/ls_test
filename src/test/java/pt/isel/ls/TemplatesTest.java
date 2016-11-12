@@ -3,15 +3,15 @@ package pt.isel.ls;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.commands.Command;
-import pt.isel.ls.commands.CommandManager;
+import pt.isel.ls.manager.CommandManager;
 import pt.isel.ls.domain.CheckList;
 import pt.isel.ls.domain.Collections;
 import pt.isel.ls.domain.Task;
 import pt.isel.ls.domain.Template;
 import pt.isel.ls.jbdc.DBConnection;
 import pt.isel.ls.manager.Request;
-import pt.isel.ls.manager.Result;
-import pt.isel.ls.manager.Tree;
+import pt.isel.ls.domain.Result;
+import pt.isel.ls.tree.Tree;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -1,9 +1,11 @@
 package pt.isel.ls.domain;
 
 
-import pt.isel.ls.representation.html.*;
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.HTMLTemplate;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
+import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -54,16 +56,20 @@ public class Template extends ObjectRepresentation {
                 (checklists==null?"":"checklists: "+checklists)+"\n";
     }
 
+    @Override
+    public TextPlain getTextPlain() {
+        return new TextPlain(toString());
+    }
+
     public Template populate(ResultSet rs) throws SQLException {
         this.tid = rs.getInt("tid");
         this.name = rs.getString("temp_name");
         this.description = rs.getString("temp_description");
+        this.templateTasks = new ArrayList<>();
         return this;
     }
 
     public void populateTasks(ResultSet rs) throws SQLException {
-        if(templateTasks == null)
-            templateTasks = new ArrayList<>();
         templateTasks.add(new Task().populateTaskTemp(rs));
     }
 
@@ -98,11 +104,12 @@ public class Template extends ObjectRepresentation {
     }
 
     @Override
-    public HtmlObject getHtml() {
-        HtmlObject ho = new HtmlObject();
-        ho.add(new HtmlNumber("tid", tid));
-        ho.add(new HtmlString("name", name));
-        ho.add(new HtmlString("description", description));
-        return ho;
+    public HTML getHTML() {
+        return new HTMLTemplate(this);
+    }
+
+
+    public void addTask(Task task) {
+        templateTasks.add(task);
     }
 }

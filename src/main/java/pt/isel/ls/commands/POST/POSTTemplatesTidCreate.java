@@ -1,15 +1,11 @@
 package pt.isel.ls.commands.POST;
 
-import pt.isel.ls.commands.Command;
 import pt.isel.ls.commands.CommandWithConnection;
-import pt.isel.ls.domain.Task;
 import pt.isel.ls.domain.Template;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.domain.Result;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class POSTTemplatesTidCreate extends CommandWithConnection {
 
@@ -24,6 +20,7 @@ public class POSTTemplatesTidCreate extends CommandWithConnection {
         String query2 = "select * from task_template where tid = ?";
         String query3 = "insert into task_check (task_duedate, isClosed, lid, cid) values (?, ?, ?, ?)";
 
+        con.setAutoCommit(false);
         try (PreparedStatement statement = con.prepareStatement(query);
              PreparedStatement statement1 = con.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement statement2 = con.prepareStatement(query2);

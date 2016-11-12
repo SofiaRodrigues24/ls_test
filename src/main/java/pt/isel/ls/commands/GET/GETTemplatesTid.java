@@ -1,9 +1,8 @@
 package pt.isel.ls.commands.GET;
 
-import pt.isel.ls.commands.Command;
 import pt.isel.ls.commands.CommandWithConnection;
 import pt.isel.ls.domain.Template;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.domain.Result;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,9 +24,7 @@ public class GETTemplatesTid extends CommandWithConnection {
 
         String query2 = "select * from template inner join checklist " +
                 "on (template.tid = ? and template.tid = checklist.tid)";
-
         con.setAutoCommit(false);
-
         try(PreparedStatement statement = con.prepareStatement(query);
             PreparedStatement statement1 = con.prepareStatement(query1);
             PreparedStatement statement2 = con.prepareStatement(query2)) {

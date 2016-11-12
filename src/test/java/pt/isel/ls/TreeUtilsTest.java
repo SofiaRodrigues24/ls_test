@@ -5,7 +5,7 @@ import pt.isel.ls.commands.DELETE.DELETEChecklistsCidTagsGid;
 import pt.isel.ls.commands.DELETE.DELETETagsGid;
 import pt.isel.ls.commands.GET.*;
 import pt.isel.ls.commands.POST.*;
-import pt.isel.ls.manager.Tree;
+import pt.isel.ls.tree.Tree;
 
 public class TreeUtilsTest {
 

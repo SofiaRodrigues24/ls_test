@@ -1,6 +1,7 @@
 package pt.isel.ls.commands;
 
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.manager.CommandManager;
+import pt.isel.ls.domain.Result;
 
 public class OPTIONS implements Command {
     @Override

@@ -1,13 +1,13 @@
-package pt.isel.ls.commands;
+package pt.isel.ls.manager;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import pt.isel.ls.domain.ObjectRepresentation;
 import pt.isel.ls.jbdc.DBConnection;
-import pt.isel.ls.representation.html.HtmlObject;
+import pt.isel.ls.domain.Result;
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.HTMLWriter;
 import pt.isel.ls.representation.json.JSONObject;
-import pt.isel.ls.manager.Request;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -29,7 +29,7 @@ public class CommandManager {
         return DBConnection.getConnection();
     }
 
-    public Result getResult(Result result) throws IOException {
+    public Result getResultType(Result result) throws IOException {
         if(request.getMethod().equals("GET")) {
             String accept = getAccept() ;
             if(accept == null || accept.equals("text/html"))
@@ -37,17 +37,24 @@ public class CommandManager {
             if(accept.equals("application/json"))
                 return getJsonObject(result);
         }
-        return result;
+        return getTextPlain(result);
     }
+
+    private Result<TextPlain> getTextPlain(Result result) {
+        TextPlain res = ((ObjectRepresentation)result.getResult()).getTextPlain();
+        return new Result<>(res);
+    }
+
+    private Result<HTML> getHtml(Result result) {
+        HTML res = ((ObjectRepresentation)result.getResult()).getHTML();
+        res.write(new HTMLWriter());
+        return new Result<>(res);
+    }
+
 
     private Result<JSONObject> getJsonObject(Result result) throws IOException {
         JSONObject res = ((ObjectRepresentation)result.getResult()).getJsonObject();
         return new Result<JSONObject>(res);
-    }
-
-    public Result<HtmlObject> getHtml(Result result) {
-        HtmlObject obj = ((ObjectRepresentation)result.getResult()).getHtml();
-        return new Result<HtmlObject>(obj);
     }
 
     public boolean hasFileName() {
@@ -57,16 +64,28 @@ public class CommandManager {
 
     public void createFile(Result result) throws IOException {
         String accept = getAccept();
-        if(accept.equals("application/json")) {
+
+        if(accept == null || accept.equals("text/html")) {
+            HTML res = (HTML)result.getResult();
+            res.toFile(request.getHeader().get("filename"));
+        }else if(accept.equals("application/json")){
             JSONObject res = (JSONObject)result.getResult();
-            res.writer(request.getHeader().get("filename"));
+            res.toFile(request.getHeader().get("filename"));
         }else {
-            //TODO: passar o filename
-            //html
+            TextPlain res = (TextPlain)result.getResult();
+            res.toFile(request.getHeader().get("filename"));
         }
     }
 
     public String getAccept() {
         return request.getHeader()!=null?request.getHeader().get("accept"):null;
+    }
+
+    public void consumerResult(Result result) throws IOException {
+        if(hasFileName()) {
+            createFile(result);
+        }else {
+            result.print();
+        }
     }
 }

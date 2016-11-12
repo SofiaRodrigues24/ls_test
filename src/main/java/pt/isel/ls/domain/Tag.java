@@ -1,7 +1,7 @@
 package pt.isel.ls.domain;
 
-import pt.isel.ls.representation.html.*;
 import pt.isel.ls.representation.json.JSONObject;
+import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -41,6 +41,11 @@ public class Tag extends ObjectRepresentation {
         return "\n\t\tLID: "+ gid +"\n\t\tname: "+name+ "\n\t\tcolor: "+color+"\n";
     }
 
+    @Override
+    public TextPlain getTextPlain() {
+        return new TextPlain(toString());
+    }
+
     public Tag populate(ResultSet rs) throws SQLException {
         this.gid = rs.getInt("gid");
         this.name = rs.getString("tag_name");
@@ -62,12 +67,5 @@ public class Tag extends ObjectRepresentation {
                 );
     }
 
-    @Override
-    public HtmlObject getHtml() {
-        HtmlObject ho = new HtmlObject();
-        ho.add(new HtmlNumber("gid", gid));
-        ho.add(new HtmlString("name", name));
-        ho.add(new HtmlNumber("color", color));
-        return ho;
-    }
+
 }

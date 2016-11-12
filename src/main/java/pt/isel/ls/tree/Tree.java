@@ -1,6 +1,7 @@
-package pt.isel.ls.manager;
+package pt.isel.ls.tree;
 
 import pt.isel.ls.commands.Command;
+import pt.isel.ls.manager.Request;
 
 import java.util.Arrays;
 import java.util.HashMap;

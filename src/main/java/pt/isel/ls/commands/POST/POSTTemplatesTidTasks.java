@@ -1,9 +1,8 @@
 package pt.isel.ls.commands.POST;
 
 
-import pt.isel.ls.commands.Command;
 import pt.isel.ls.commands.CommandWithConnection;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.domain.Result;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ public class POSTTemplatesTidTasks extends CommandWithConnection {
 
         String query = "insert into task (task_name, task_description) values (?, ?)";
         String query1 = "insert into task_template (lid, tid) values (?, ?)";
-
         con.setAutoCommit(false);
         try (PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement statement1 = con.prepareStatement(query1);){

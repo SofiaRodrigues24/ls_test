@@ -1,19 +1,16 @@
 package pt.isel.ls.representation.json;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class JSONObject implements JSONValue {
 
-
     private List<String> names;
     private List<JSONValue> values;
-
-    private HashMap<String, JSONValue> map;
-
 
     public JSONObject(){
         names = new ArrayList<>();
@@ -53,25 +50,15 @@ public class JSONObject implements JSONValue {
         return this;
     }
 
-    public void writer(String filename) throws IOException {
-        JSONWriter write = this.write(new JSONWriter(new BufferedWriter(new FileWriter(filename))));
-        write.close();
+    public void toFile(String filename) throws IOException {
+        FileWriter fileWriter = new FileWriter(filename);
+        JSONWriter writer = write(new JSONWriter());
+        fileWriter.append(writer.toString());
+        fileWriter.close();
     }
 
     public List<String> getNames() {
         return names;
-    }
-
-    public void setNames(List<String> names) {
-        this.names = names;
-    }
-
-    public List<JSONValue> getValues() {
-        return values;
-    }
-
-    public void setValues(List<JSONValue> values) {
-        this.values = values;
     }
 
     @Override
@@ -99,30 +86,15 @@ public class JSONObject implements JSONValue {
 
     @Override
     public String toString() {
-        JSONWriter writer = new JSONWriter();
-        String res = "";
 
+        String res = null;
+        JSONWriter jsonWriter = new JSONWriter();
         try {
-            res += writer.writeObjectOpen();
-            Iterator<String> namesIterator = names.iterator();
-            Iterator<JSONValue> valuesIterator = values.iterator();
-
-            if(namesIterator.hasNext()) {
-                res+= writer.writeString(namesIterator.next().toString());
-                res += writer.writeMemberSeparator();
-                res += valuesIterator.next().toString();
-                while (namesIterator.hasNext()) {
-                    res += writer.writeSeparator();
-                    res += writer.writeString(namesIterator.next().toString());
-                    res+= writer.writeMemberSeparator();
-                    res += valuesIterator.next().toString();
-                }
-            }
-            res += writer.writeObjectClose();
+            JSONWriter write = write(jsonWriter);
+            res = write.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         return res;
     }

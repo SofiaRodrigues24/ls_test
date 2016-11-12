@@ -2,9 +2,11 @@ package pt.isel.ls.domain;
 
 
 
-import pt.isel.ls.representation.html.*;
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.HTMLChecklist;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
+import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -66,6 +68,8 @@ public class CheckList extends ObjectRepresentation {
         return duedate;
     }
 
+    public boolean getCompleted(){return completed;}
+
 
     public List<Tag> getTags() {
         return tags;
@@ -103,6 +107,11 @@ public class CheckList extends ObjectRepresentation {
                 "\n";
     }
 
+    @Override
+    public TextPlain getTextPlain() {
+        return new TextPlain(toString());
+    }
+
 
     @Override
     public JSONObject getJsonObject() throws IOException {
@@ -132,13 +141,9 @@ public class CheckList extends ObjectRepresentation {
     }
 
     @Override
-    public HtmlObject getHtml() {
-        HtmlObject ho = new HtmlObject();
-        ho.add(new HtmlNumber("cid", cid));
-        ho.add(new HtmlString("name", name));
-        ho.add(new HtmlString("description", description));
-        ho.add(new HtmlBoolean("isClosed", completed));
-        ho.add(new HtmlDuedate("duedate", duedate));
-        return ho;
+    public HTML getHTML() {
+        return new HTMLChecklist(this);
     }
+
+
 }

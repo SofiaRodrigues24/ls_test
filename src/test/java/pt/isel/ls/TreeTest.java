@@ -4,7 +4,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.isel.ls.commands.Command;
 import pt.isel.ls.manager.Request;
-import pt.isel.ls.manager.Tree;
+import pt.isel.ls.tree.Tree;
 
 import java.util.HashMap;
 

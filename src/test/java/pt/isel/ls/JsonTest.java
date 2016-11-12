@@ -22,7 +22,7 @@ public class JsonTest {
         CheckList c = new CheckList(1, "json", "jsonTest");
         JSONObject jsonObject = c.getJsonObject();
         String s = jsonObject.toString();
-        String exp = "{\"class\":[checklist],\"properties\":{\"cid\":1,\"name\":json,\"description\":jsonTest,\"isClosed\":false}}";
+        String exp = "{\"class\":[\"checklist\"],\"properties\":{\"cid\":1,\"name\":\"json\",\"description\":\"jsonTest\",\"isClosed\":false}}";
 
         List<String> names = jsonObject.getNames();
 
@@ -40,7 +40,7 @@ public class JsonTest {
         Template t = new Template(1, "json", "jsonTest");
         JSONObject jsonObject = t.getJsonObject();
         String s = jsonObject.toString();
-        String exp = "{\"class\":[template],\"properties\":{\"tid\":1,\"name\":json,\"description\":jsonTest}}";
+        String exp = "{\"class\":[\"template\"],\"properties\":{\"tid\":1,\"name\":\"json\",\"description\":\"jsonTest\"}}";
 
         List<String> names = jsonObject.getNames();
 
@@ -59,7 +59,7 @@ public class JsonTest {
         Task t = new Task(1, "json", "jsonTest");
         JSONObject jsonObject = t.getJsonObject();
         String s = jsonObject.toString();
-        String exp = "{\"class\":[task],\"properties\":{\"lid\":1,\"name\":json,\"description\":jsonTest,\"isClosed\":false}}";
+        String exp = "{\"class\":[\"task\"],\"properties\":{\"lid\":1,\"name\":\"json\",\"description\":\"jsonTest\",\"isClosed\":false}}";
 
         assertEquals(exp, s);
     }
@@ -78,10 +78,10 @@ public class JsonTest {
         JSONObject jsonObject = list.getJsonObject();
         String s = jsonObject.toString();
 
-        String exp = "{\"class\":[checklist,collection],\"properties\":{\"count\":2}," +
+        String exp = "{\"class\":[\"checklist\",\"collection\"],\"properties\":{\"count\":2}," +
                 "\"entities\":[" +
-                "{\"class\":[checklist],\"properties\":{\"cid\":1,\"name\":test1,\"description\":jsonTest1,\"isClosed\":false}}," +
-                "{\"class\":[checklist],\"properties\":{\"cid\":2,\"name\":test2,\"description\":jsonTest2,\"isClosed\":false}}]}";
+                "{\"class\":[\"checklist\"],\"properties\":{\"cid\":1,\"name\":\"test1\",\"description\":\"jsonTest1\",\"isClosed\":false}}," +
+                "{\"class\":[\"checklist\"],\"properties\":{\"cid\":2,\"name\":\"test2\",\"description\":\"jsonTest2\",\"isClosed\":false}}]}";
 
         List<String> names = jsonObject.getNames();
 

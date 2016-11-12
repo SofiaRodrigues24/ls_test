@@ -2,9 +2,9 @@ package pt.isel.ls.domain;
 
 
 
-import pt.isel.ls.representation.html.*;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
+import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -62,6 +62,11 @@ public class Task extends ObjectRepresentation {
                 (description==null? "" :"\n\t\tdescription: "+description)+"\n";
     }
 
+    @Override
+    public TextPlain getTextPlain() {
+        return null;
+    }
+
     public Task populate(ResultSet rs) throws SQLException {
         this.lid = rs.getInt("lid");
         this.name = rs.getString("task_name");
@@ -95,14 +100,7 @@ public class Task extends ObjectRepresentation {
                 );
     }
 
-    @Override
-    public HtmlObject getHtml() {
-        HtmlObject ho = new HtmlObject();
-        ho.add(new HtmlNumber("lid", lid));
-        ho.add(new HtmlString("name", name));
-        ho.add(new HtmlString("description", description));
-        ho.add(new HtmlBoolean("isClosed", isClosed));
-        ho.add(new HtmlDuedate("duedate", duedate));
-        return ho;
+    public Date getDuedate() {
+        return duedate;
     }
 }

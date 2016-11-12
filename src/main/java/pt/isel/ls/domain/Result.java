@@ -1,6 +1,6 @@
-package pt.isel.ls.manager;
+package pt.isel.ls.domain;
 
-import pt.isel.ls.commands.CommandManager;
+import pt.isel.ls.manager.CommandManager;
 
 import java.io.IOException;
 
@@ -24,11 +24,7 @@ public class Result<E> {
     }
 
     public void consumer(CommandManager cmdManager) throws IOException {
-        if(!cmdManager.hasFileName()) {
-            print();
-        }
-        else {
-            cmdManager.createFile(this);
-        }
+        Result result = cmdManager.getResultType(this);
+        cmdManager.consumerResult(result);
     }
 }

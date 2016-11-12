@@ -6,12 +6,12 @@ def LS_TEST = 'LS_DBCONN_TEST_SQLSRV'
 def LS_APP = 'LS_DBCONN_APP_SQLSRV'
 
 task initDB(type:Exec){
-    workingDir './'
+    workingDir './script'
     commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i tables.sql';
 }
 
 task dropTables(type:Exec) {
-    workingDir './'
+    workingDir './script'
     commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i drop.sql';
 }
 
@@ -35,15 +35,5 @@ dependencies {
     compile fileTree(dir: 'vendor/main', include: '*.jar')
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
-
-//compileJava {
-//    options.compilerArgs << '-Xlint:unchecked'
-//    options.fork = true
-//    options.forkOptions.executable = 'javac'
-//}
-//
-//compileTestJava {
-//    options.compilerArgs << '-Xlint:unchecked'
-//}
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:unchecked']

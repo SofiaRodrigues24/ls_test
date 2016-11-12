@@ -1,10 +1,9 @@
 package pt.isel.ls.commands.GET;
 
-import pt.isel.ls.commands.Command;
 import pt.isel.ls.commands.CommandWithConnection;
 import pt.isel.ls.domain.CheckList;
 import pt.isel.ls.domain.Collections;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.domain.Result;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,8 +29,7 @@ public class GETChecklists extends CommandWithConnection {
             }
         }
 
-
-        Collections<CheckList> col = (Collections<CheckList>) new Collections("checklist", checklists);
+        Collections<CheckList> col = new Collections("checklist", checklists);
         return new Result<>(col);
     }
 

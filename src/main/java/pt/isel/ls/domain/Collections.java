@@ -1,10 +1,11 @@
 package pt.isel.ls.domain;
 
 
-import pt.isel.ls.representation.html.HtmlArray;
-import pt.isel.ls.representation.html.HtmlObject;
+import pt.isel.ls.representation.html.HTML;
+import pt.isel.ls.representation.html.HTMLData;
 import pt.isel.ls.representation.json.JSONArray;
 import pt.isel.ls.representation.json.JSONObject;
+import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -19,7 +20,6 @@ public class Collections<E> extends ObjectRepresentation {
       this.type = type;
       this.list = list;
    }
-
 
    public List<? extends ObjectRepresentation> getList() {
       return list;
@@ -47,22 +47,19 @@ public class Collections<E> extends ObjectRepresentation {
    }
 
    @Override
+   public HTML getHTML() {
+      return HTMLData.get(type, list);
+   }
+
+
+   @Override
    public String toString() {
       return list.toString();
    }
 
-   @Override
-   public HtmlObject getHtml() {
-      HtmlObject ho = new HtmlObject();
+    @Override
+    public TextPlain getTextPlain() {
+        return new TextPlain(toString());
+    }
 
-      HtmlArray ha = new HtmlArray();
-      Iterator<? extends ObjectRepresentation> iter = list.iterator();
-      while (iter.hasNext()) {
-         ha.add(iter.next().getHtml());
-      }
-
-      ho.add(ha);
-
-      return ho;
-   }
 }

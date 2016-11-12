@@ -1,20 +1,23 @@
 package pt.isel.ls.representation.html;
 
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class HTML {
-    private String name, value;
-    public HTML(String name , String value){
-        this.name = name;
-        this.value = value;
+public abstract class HTML {
+
+    protected HTMLWriter writer;
+    protected final String [] columns = new String[] {"id", "name", "description"};
+
+    public abstract HTMLWriter write(HTMLWriter writer);
+
+    public void toFile(String filename) throws IOException {
+        FileWriter fileWriter = new FileWriter(filename);
+        fileWriter.append(writer.toString());
+        fileWriter.close();
     }
 
-
-
-    public String getName() {
-        return name;
-    }
-
-    public String getValue() {
-        return value;
+    @Override
+    public String toString() {
+        return writer.toString();
     }
 }

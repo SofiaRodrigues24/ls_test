@@ -2,7 +2,7 @@ package pt.isel.ls.commands.DELETE;
 
 
 import pt.isel.ls.commands.CommandWithConnection;
-import pt.isel.ls.manager.Result;
+import pt.isel.ls.domain.Result;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
