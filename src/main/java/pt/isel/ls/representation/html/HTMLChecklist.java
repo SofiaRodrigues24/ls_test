@@ -37,17 +37,17 @@ public class HTMLChecklist extends HTML {
             writer.op("th", s);
         }
         writer.end("tr");
-
-        Iterator<Task> iterator = checklist.getTasks().iterator();
-        while (iterator.hasNext())  {
-            Task next = iterator.next();
-            writer.start("tr");
-            writer.op("td", String.valueOf(next.getLid()));
-            writer.op("td", next.getName());
-            writer.op("td", next.getDescription());
-            writer.end("tr");
+        if(checklist.getTasks()!=null) {
+            Iterator<Task> iterator = checklist.getTasks().iterator();
+            while (iterator.hasNext()) {
+                Task next = iterator.next();
+                writer.start("tr");
+                writer.op("td", String.valueOf(next.getLid()));
+                writer.op("td", next.getName());
+                writer.op("td", next.getDescription());
+                writer.end("tr");
+            }
         }
-
         writer.end("table");
 
 
@@ -59,15 +59,16 @@ public class HTMLChecklist extends HTML {
             writer.op("th", s);
         }
         writer.end("tr");
-
-        Iterator<Tag> iterator1 = checklist.getTags().iterator();
-        while (iterator.hasNext())  {
-            Tag next = iterator1.next();
-            writer.start("tr");
-            writer.op("td", String.valueOf(next.getGid()));
-            writer.op("td", next.getName());
-            writer.op("td", String.valueOf(next.getColor()));
-            writer.end("tr");
+        if(checklist.getTags()!=null) {
+            Iterator<Tag> iterator1 = checklist.getTags().iterator();
+            while (iterator1.hasNext()) {
+                Tag next = iterator1.next();
+                writer.start("tr");
+                writer.op("td", String.valueOf(next.getGid()));
+                writer.op("td", next.getName());
+                writer.op("td", String.valueOf(next.getColor()));
+                writer.end("tr");
+            }
         }
         writer.end("table");
 
