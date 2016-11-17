@@ -23,7 +23,8 @@ public class JSONArray implements JSONValue {
     }
 
     public JSONArray add(JSONValue value) {
-        values.add(value);
+        if(value != null)
+            values.add(value);
         return this;
     }
 

@@ -22,7 +22,6 @@ public class POSTChecklistsCidTasksLid extends CommandWithConnection {
 
         Result<Integer> res = new Result<>(Integer.parseInt(map.get("{lid}")));
 
-        //return new Result<Integer>(Integer.parseInt(map.get("{lid}")));
         return res;
     }
 

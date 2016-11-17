@@ -16,7 +16,7 @@ public class POSTTemplatesTidCreate extends CommandWithConnection {
         Template template = null;
 
         String query = "select * from template where tid = ?";
-        String query1 = "insert into checklist(check_name, check_description, check_duedate, tid) values (?, ?, ?, ?)";
+        String query1 = "insert into checklist(check_name, check_description, check_duedate, completed, tid) values (?, ?, ?, ?, ?)";
         String query2 = "select * from task_template where tid = ?";
         String query3 = "insert into task_check (task_duedate, isClosed, lid, cid) values (?, ?, ?, ?)";
 
@@ -34,7 +34,8 @@ public class POSTTemplatesTidCreate extends CommandWithConnection {
             statement1.setString(1, map.containsKey("name")?map.get("name"):template.getName());
             statement1.setString(2, map.containsKey("description")?map.get("description"):template.getDescription());
             statement1.setDate(3, map.containsKey("duedate")?Date.valueOf(map.get("duedate")):null);
-            statement1.setInt(4, template.getTid());
+            statement1.setBoolean(4, false);
+            statement1.setInt(5, template.getTid());
             statement1.executeUpdate();
 
             ResultSet generatedKeys = statement1.getGeneratedKeys();

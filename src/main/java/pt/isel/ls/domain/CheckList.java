@@ -30,6 +30,7 @@ public class CheckList extends ObjectRepresentation {
     public CheckList(int CID) {
         this.cid = CID;
         this.tasks = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
     public CheckList(int CID, String name, String description) {
@@ -100,10 +101,10 @@ public class CheckList extends ObjectRepresentation {
 
     @Override
     public String toString() {
-        return "checklist "+ cid +"\n\tname: "+name+"\n\tdescription: "+description+ "" +
-                ((duedate!=null)?("\n\tduedate: "+ duedate):"")+
-                ((tasks!= null)? ("\n\ttasks: "+tasks):"") +
-                ((tags!= null)? ("\n\ttags: "+tags):"")+
+        return "checklist "+ cid +" --> name: "+name+", description: "+description+ "" +
+                ((duedate!=null)?(", duedate: "+ duedate):"")+
+                ((tasks.size()!= 0)? ("\n\ttasks: "+tasks):"") +
+                ((tags.size()!=0)? ("\n\ttags: "+tags):"")+
                 "\n";
     }
 
@@ -117,13 +118,26 @@ public class CheckList extends ObjectRepresentation {
     public JSONObject getJsonObject() throws IOException {
 
         JSONObject jo = new JSONObject();
-        JSONArray ja = null;
+        JSONArray jaTasks = null, jaTags = null;
 
         if(tasks.size() != 0) {
-            ja = new JSONArray();
-            for (Task t : tasks) {
-                ja.add(t.getJsonObject());
+            jaTasks = new JSONArray();
+            for (Task t : this.tasks) {
+                jaTasks.add(t.getJsonObject());
             }
+        }
+
+        if(tags.size() != 0) {
+            jaTags = new JSONArray();
+            for (Tag t : this.tags) {
+                jaTags.add(t.getJsonObject());
+            }
+        }
+
+        JSONArray ja = (tasks.size()!=0 || tags.size()!=0)?new JSONArray():null;
+        if(ja!=null) {
+            ja.add(jaTasks);
+            ja.add(jaTags);
         }
 
 

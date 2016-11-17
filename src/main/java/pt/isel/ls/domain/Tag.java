@@ -38,7 +38,7 @@ public class Tag extends ObjectRepresentation {
 
     @Override
     public String toString() {
-        return "\n\t\tLID: "+ gid +"\n\t\tname: "+name+ "\n\t\tcolor: "+color+"\n";
+        return "GID: "+ gid +", name: "+name+ ", color: "+color+"\n";
     }
 
     @Override

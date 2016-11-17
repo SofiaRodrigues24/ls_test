@@ -51,9 +51,9 @@ public class Template extends ObjectRepresentation {
 
     @Override
     public String toString() {
-        return "tid: "+ tid +"\n\tname: "+name+"\n\tdescription: "+description+"\n\t" +
-                (templateTasks==null?"":"tasks: "+templateTasks)+"\n"+
-                (checklists==null?"":"checklists: "+checklists)+"\n";
+        return "TID: "+ tid +", name: "+name+", description: "+description+"" +
+                (templateTasks.size()==0?"":"\n\ttasks: "+templateTasks)+""+
+                (checklists==null?"":"\n\tchecklists: "+checklists)+"\n";
     }
 
     @Override
@@ -83,13 +83,28 @@ public class Template extends ObjectRepresentation {
     @Override
     public JSONObject getJsonObject() throws IOException {
         JSONObject jo = new JSONObject();
-        JSONArray ja = null;
+        JSONArray jaTasks = null, jaChecks = null;
 
         if(templateTasks != null && templateTasks.size() != 0) {
-            ja = new JSONArray();
+            jaTasks = new JSONArray();
             for (Task t : templateTasks) {
-                ja.add(t.getJsonObject());
+                jaTasks.add(t.getJsonObject());
             }
+        }
+
+        if(checklists != null && checklists.size() != 0) {
+            jaChecks = new JSONArray();
+            for (CheckList t : checklists) {
+                jaChecks.add(t.getJsonObject());
+            }
+        }
+
+        JSONArray ja = null;
+        ja = (jaTasks!=null || jaChecks!=null)?new JSONArray():null;
+
+        if(ja!=null) {
+            ja.add(jaTasks);
+            ja.add(jaChecks);
         }
 
         jo.add("class", new JSONArray()
@@ -108,8 +123,4 @@ public class Template extends ObjectRepresentation {
         return new HTMLTemplate(this);
     }
 
-
-    public void addTask(Task task) {
-        templateTasks.add(task);
-    }
 }

@@ -3,6 +3,7 @@ package pt.isel.ls.representation.html;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class HTMLData {
 
     private static  final HashMap<String, HTMLCollections> templates = new HashMap<String, HTMLCollections>() {

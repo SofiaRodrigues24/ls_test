@@ -5,6 +5,7 @@ import pt.isel.ls.domain.Tag;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class HTMLCollectionsTag extends HTMLCollections{
 
 

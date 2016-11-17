@@ -24,7 +24,12 @@ public class Result<E> {
     }
 
     public void consumer(CommandManager cmdManager) throws IOException {
-        Result result = cmdManager.getResultType(this);
-        cmdManager.consumerResult(result);
+        String method = cmdManager.getMethod();
+        if(method.equals("OPTIONS") || method.equals("POST")) {
+            print();
+        } else {
+            Result result = cmdManager.getResultType(this);
+            cmdManager.consumerResult(result);
+        }
     }
 }

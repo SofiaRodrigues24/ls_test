@@ -21,12 +21,14 @@ public class App {
         setup(tree);
 
         Scanner in = new Scanner(System.in);
+        boolean isIterative = args.length == 0;
 
-        while (true) {
-            System.out.println("Choose a command: ");
+        String arguments = "";
 
-            String s = in.nextLine();
-            Request rq = new Request(s);
+        do {
+			System.out.println("Choose a command ");
+            arguments = isIterative?in.nextLine():toString(args);
+            Request rq = new Request(arguments);
             Command command = tree.search(rq);
             CommandManager cmdManager = new CommandManager(rq);
 
@@ -34,11 +36,20 @@ public class App {
 
                 Result result = command.execute(cmdManager);
                 result.consumer(cmdManager);
+                System.out.println("------ ------ ------");
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } while(isIterative);
+    }
+
+    private static String toString(String [] args) {
+        String res = "";
+        for (int i = 0; i<args.length; ++i) {
+            res +=args[i]+ " ";
         }
+        return res;
     }
 
 

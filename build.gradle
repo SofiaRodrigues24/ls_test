@@ -2,17 +2,17 @@ import java.lang.*
 apply plugin: 'java'
 
 version = '1.0'
-def LS_TEST = 'LS_DBCONN_TEST_SQLSRV'
-def LS_APP = 'LS_DBCONN_APP_SQLSRV'
 
 task initDB(type:Exec){
+    def LS_APP = 'LS_DBCONN_APP_SQLSRV'
     workingDir './script'
-    commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i tables.sql';
+    commandLine 'cmd', '/c', getCommand(LS_APP) + ' -i drop.sql -i tables.sql';
 }
 
-task dropTables(type:Exec) {
+task initDBTest(type:Exec) {
+    def LS_TEST = 'LS_DBCONN_TEST_SQLSRV'
     workingDir './script'
-    commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i drop.sql';
+    commandLine 'cmd', '/c', getCommand(LS_TEST) + ' -i drop.sql -i tables.sql';
 }
 
 def getCommand(String str) {
@@ -29,11 +29,14 @@ def getCommand(String str) {
     return cmdTest
 }
 
-
-
 dependencies {
     compile fileTree(dir: 'vendor/main', include: '*.jar')
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:unchecked']
+
+build.dependsOn initDB
+test.dependsOn initDBTest
+
+

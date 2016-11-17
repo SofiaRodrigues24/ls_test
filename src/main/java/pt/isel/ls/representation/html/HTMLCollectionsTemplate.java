@@ -5,8 +5,8 @@ import pt.isel.ls.domain.Template;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class HTMLCollectionsTemplate extends HTMLCollections{
-
 
     private final String name;
     private List<Template> list;

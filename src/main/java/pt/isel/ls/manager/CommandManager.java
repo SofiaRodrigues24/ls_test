@@ -11,6 +11,7 @@ import pt.isel.ls.representation.plain.TextPlain;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.text.Collator;
 import java.util.HashMap;
 
 public class CommandManager {
@@ -87,5 +88,9 @@ public class CommandManager {
         }else {
             result.print();
         }
+    }
+
+    public String getMethod() {
+        return request.getMethod();
     }
 }

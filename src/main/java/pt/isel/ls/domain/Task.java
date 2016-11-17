@@ -58,8 +58,8 @@ public class Task extends ObjectRepresentation {
 
     @Override
     public String toString() {
-        return "\n\t\tLID: "+ lid +"\n\t\tname: "+name+
-                (description==null? "" :"\n\t\tdescription: "+description)+"\n";
+        return "LID: "+ lid +", name: "+name+ ", description: "+description+
+                (duedate==null? "" :", duedate: "+duedate)+"\n";
     }
 
     @Override
