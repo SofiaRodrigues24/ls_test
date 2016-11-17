@@ -31,7 +31,7 @@ public class POSTChecklistsCidTasks extends CommandWithConnection {
             }
 
             if(map.containsKey("duedate")&&Date.valueOf(map.get("duedate")).after(date))
-                throw new FailedExecuteException("invalid date");
+                throw new FailedExecuteException("Due date greater than the due date of the checklist");
 
             statement.setString(1, map.get("name"));
             statement.setString(2, map.get("description"));
@@ -51,7 +51,7 @@ public class POSTChecklistsCidTasks extends CommandWithConnection {
             statement1.executeUpdate();
 
         } catch (FailedExecuteException e) {
-            e.printStackTrace();
+            
         }
         return new Result<>(id);
 
